@@ -26,9 +26,9 @@ class _TaskState extends State<Task> {
   YoutubePlayerController? _controller;
 
   double taskPercent = 50.0;
-  
+
   TaskStatus? dropdownValue;
-    final ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
   List<TaskStatus> taskStatusList = [
     TaskStatus(color: const Color(0xff50cd89), name: "Tamamlandı"),
     TaskStatus(color: const Color(0xff009ef7), name: "Yapım Aşamasında"),
@@ -43,7 +43,8 @@ class _TaskState extends State<Task> {
     endDateController.text = DateFormat("d.MM.yyyy HH:mm").format(endDate);
     _controller = YoutubePlayerController(
       flags: const YoutubePlayerFlags(autoPlay: false),
-      initialVideoId: YoutubePlayer.convertUrlToId("https://www.youtube.com/watch?v=YXa8qsC5xws&ab_channel=howtopaintinfo")!,
+      initialVideoId: YoutubePlayer.convertUrlToId(
+          "https://www.youtube.com/watch?v=YXa8qsC5xws&ab_channel=howtopaintinfo")!,
     );
     dropdownValue = taskStatusList.first;
   }
@@ -74,7 +75,9 @@ class _TaskState extends State<Task> {
                 Container(
                   width: 8,
                   height: 8,
-                  decoration: const BoxDecoration(color: Color(0xff4800ff), borderRadius: BorderRadius.all(Radius.circular(20))),
+                  decoration: const BoxDecoration(
+                      color: Color(0xff4800ff),
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
                 ),
                 const SizedBox(
                   width: 4,
@@ -144,10 +147,12 @@ class _TaskState extends State<Task> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(14.0).copyWith(bottom: 0, left: 20),
+                    padding: const EdgeInsets.all(14.0)
+                        .copyWith(bottom: 0, left: 20),
                     child: Text(
                       "Görev Yüzdesi",
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+                      style:
+                          TextStyle(fontSize: 12, color: Colors.grey.shade700),
                     ),
                   ),
                   Slider(
@@ -166,47 +171,53 @@ class _TaskState extends State<Task> {
                 ],
               )),
           BoxTile(
-            onTap: () async { XFile? image = await _picker.pickImage(source: ImageSource.gallery);},
-            padding: EdgeInsets.zero,
+            onTap: () async {
+              XFile? image =
+                  await _picker.pickImage(source: ImageSource.gallery);
+            },
+            trailing: IconButton(
+              onPressed: () async {
+              XFile? image =
+                  await _picker.pickImage(source: ImageSource.gallery);
+            },
+              icon: const Icon(
+                LineIcons.plus,
+                color: Colors.blue,
+              ),
+            ),
             margin: const EdgeInsets.only(bottom: 8),
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(14.0).copyWith(bottom: 0, left: 20),
-                  child: Text(
-                    "Havuzun Önden Fotoğrafı",
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(14.0).copyWith(left: 20),
-                  child: const Text("havuz-ön-fotograf.png"),
-                ),
-              ],
+            title: const Text(
+              "Fotoğraflar",
             ),
           ),
           BoxTile(
-           onTap: () async { XFile? image = await _picker.pickImage(source: ImageSource.gallery);},
-            padding: EdgeInsets.zero,
+            onTap: () async {
+              XFile? image =
+                  await _picker.pickImage(source: ImageSource.gallery);
+            },
+            trailing: IconButton(
+              onPressed: () {},
+              icon: const Icon(LineIcons.times),
+            ),
             margin: const EdgeInsets.only(bottom: 8),
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(14.0).copyWith(bottom: 0, left: 20),
-                  child: Text(
-                    "Havuzun Üstden Fotoğrafı",
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(14.0).copyWith(left: 20),
-                  child: const Text("havuz-üst-fotograf.jpeg"),
-                ),
-              ],
+            title: Text(
+              "camera-2352-26.09.2022.jpg",
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+            ),
+          ),
+                    BoxTile(
+            onTap: () async {
+              XFile? image =
+                  await _picker.pickImage(source: ImageSource.gallery);
+            },
+            trailing: IconButton(
+              onPressed: () {},
+              icon: const Icon(LineIcons.times),
+            ),
+            margin: const EdgeInsets.only(bottom: 8),
+            title: Text(
+              "camera-2346-26.09.2022.jpg",
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
             ),
           ),
           BoxTile(
@@ -226,7 +237,10 @@ class _TaskState extends State<Task> {
               ),
             ],
           ),
-          ElevatedButton(style: ElevatedButton.styleFrom(primary: dropdownValue?.color), onPressed: () {}, child: const Text("Onaya Gönder"))
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: dropdownValue?.color),
+              onPressed: () {},
+              child: const Text("Onaya Gönder"))
         ],
       ),
     );
