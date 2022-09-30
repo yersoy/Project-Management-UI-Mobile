@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 class API {
   static String tenantName = "sisel";
   static String url = "192.168.1.3:45471";
-
+  static int taskcount = 0;
   static Future<AuthModel> login(String username, String password) async {
     final response = await http.post(
         Uri.http(
@@ -44,7 +44,7 @@ class API {
     var data =
         json.decode(const Utf8Decoder().convert(response.bodyBytes))["data"]
             ["\$values"];
-
+    taskcount = data.length;
     return List<ModuleTasks>.from(
       data.map(
         (model) => ModuleTasks.fromJson(model),

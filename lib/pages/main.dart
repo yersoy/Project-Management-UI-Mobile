@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart';
+import 'package:cilekhavuz/api/api.dart';
 import 'package:cilekhavuz/pages/dashboard/dashboard.dart';
 import 'package:cilekhavuz/pages/reports/reports.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
             icon: Badge(
               badgeContent: Text(
-                '3',
+                API.taskcount.toString(),
                 style: TextStyle(color: Colors.white),
               ),
               child: Icon(FontAwesomeIcons.personDigging, size: 30),

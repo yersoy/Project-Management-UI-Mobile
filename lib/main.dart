@@ -1,3 +1,4 @@
+import 'package:cilekhavuz/pages/dashboard/dashboard.dart';
 import 'package:cilekhavuz/pages/login_auth.dart';
 import 'package:cilekhavuz/pages/main.dart';
 import 'package:cilekhavuz/pages/project/project.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       routes: {
         Routes.SPLASH: (context) => const Splash(),
         Routes.AUTHENTICATION: (context) => const LoginAuth(),
-        Routes.DASHBOARD: (context) => const MainPage(),
+        Routes.DASHBOARD: (context) => const Dashboard(),
         Routes.PROJECTS: (context) => const Project(),
       },
     );

@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 class ModuleTasks {
+  String? $id;
   int? tableId;
   int? primaryId;
   int? workStepId;
@@ -26,11 +29,11 @@ class ModuleTasks {
   bool? isRequiredVideo;
   int? eventStatusId;
   String? eventStatusName;
-  String? eventStatusValue;
+  EventStatusValue? eventStatusValue;
   String? createdDate;
   bool? isDeleted;
   int? recorderContactPersonAccountId;
-  dynamic viewModuleTaskFiles;
+  ViewModuleTaskFiles? viewModuleTaskFiles;
   int? commentCount;
   int? documentFileCount;
   int? imageFileCount;
@@ -41,7 +44,8 @@ class ModuleTasks {
   int? contactId;
 
   ModuleTasks(
-      {this.tableId,
+      {this.$id,
+      this.tableId,
       this.primaryId,
       this.workStepId,
       this.description,
@@ -111,11 +115,15 @@ class ModuleTasks {
     isRequiredVideo = json['isRequiredVideo'];
     eventStatusId = json['eventStatusId'];
     eventStatusName = json['eventStatusName'];
-    eventStatusValue = json['eventStatusValue'];
+    eventStatusValue = json['eventStatusValue'] != null
+        ? EventStatusValue.fromJson(jsonDecode(json['eventStatusValue']))
+        : null;
     createdDate = json['createdDate'];
     isDeleted = json['isDeleted'];
     recorderContactPersonAccountId = json['recorderContactPersonAccountId'];
-    viewModuleTaskFiles = json['viewModuleTaskFiles'];
+    viewModuleTaskFiles = json['viewModuleTaskFiles'] != null
+        ? ViewModuleTaskFiles.fromJson(json['viewModuleTaskFiles'])
+        : null;
     commentCount = json['commentCount'];
     documentFileCount = json['documentFileCount'];
     imageFileCount = json['imageFileCount'];
@@ -127,7 +135,7 @@ class ModuleTasks {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['$id'] = id;
     data['tableId'] = tableId;
     data['primaryId'] = primaryId;
@@ -150,18 +158,18 @@ class ModuleTasks {
     data['auditorPersonIds'] = auditorPersonIds;
     data['auditorContactIds'] = auditorContactIds;
     data['isAuditorApprovalRequired'] = isAuditorApprovalRequired;
-    data['isRelatedContactApprovalRequired'] =
-        isRelatedContactApprovalRequired;
+    data['isRelatedContactApprovalRequired'] = isRelatedContactApprovalRequired;
     data['isRequiredFile'] = isRequiredFile;
     data['isRequiredImage'] = isRequiredImage;
     data['isRequiredVideo'] = isRequiredVideo;
     data['eventStatusId'] = eventStatusId;
     data['eventStatusName'] = eventStatusName;
-    data['eventStatusValue'] = eventStatusValue;
+    if (eventStatusValue != null) {
+      data['eventStatusValue'] = eventStatusValue!.toJson();
+    }
     data['createdDate'] = createdDate;
     data['isDeleted'] = isDeleted;
-    data['recorderContactPersonAccountId'] =
-        recorderContactPersonAccountId;
+    data['recorderContactPersonAccountId'] = recorderContactPersonAccountId;
     if (viewModuleTaskFiles != null) {
       data['viewModuleTaskFiles'] = viewModuleTaskFiles!.toJson();
     }
@@ -173,6 +181,94 @@ class ModuleTasks {
     data['id'] = id;
     data['name'] = name;
     data['contactId'] = contactId;
+    return data;
+  }
+}
+
+class EventStatusValue {
+  int? orderNo;
+  String? colorCode;
+  bool? isSms;
+  bool? isLogging;
+  bool? isEmail;
+  bool? isActive;
+  String? personelIds;
+  String? departmentIds;
+  int? id;
+  String? name;
+  String? value;
+  String? description;
+  String? descriptionEn;
+  String? parent;
+
+  EventStatusValue(
+      {this.orderNo,
+      this.colorCode,
+      this.isSms,
+      this.isLogging,
+      this.isEmail,
+      this.isActive,
+      this.personelIds,
+      this.departmentIds,
+      this.id,
+      this.name,
+      this.value,
+      this.description,
+      this.descriptionEn,
+      this.parent});
+
+  EventStatusValue.fromJson(Map<String, dynamic> json) {
+    orderNo = json['OrderNo'];
+    colorCode = json['ColorCode'];
+    isSms = json['IsSms'];
+    isLogging = json['IsLogging'];
+    isEmail = json['IsEmail'];
+    isActive = json['IsActive'];
+    personelIds = json['PersonelIds'];
+    departmentIds = json['DepartmentIds'];
+    id = json['Id'];
+    name = json['Name'];
+    value = json['Value'];
+    description = json['Description'];
+    descriptionEn = json['DescriptionEn'];
+    parent = json['Parent'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['OrderNo'] = orderNo;
+    data['ColorCode'] = colorCode;
+    data['IsSms'] = isSms;
+    data['IsLogging'] = isLogging;
+    data['IsEmail'] = isEmail;
+    data['IsActive'] = isActive;
+    data['PersonelIds'] = personelIds;
+    data['DepartmentIds'] = departmentIds;
+    data['Id'] = id;
+    data['Name'] = name;
+    data['Value'] = value;
+    data['Description'] = description;
+    data['DescriptionEn'] = descriptionEn;
+    data['Parent'] = parent;
+    return data;
+  }
+}
+
+class ViewModuleTaskFiles {
+  String? id;
+  dynamic values;
+
+  ViewModuleTaskFiles({this.id, this.values});
+
+  ViewModuleTaskFiles.fromJson(Map<String, dynamic> json) {
+    id = json['$id'];
+    values = json['$values'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['$id'] = id;
+    data['$values'] = values;
     return data;
   }
 }

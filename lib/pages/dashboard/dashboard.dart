@@ -1,13 +1,12 @@
 import 'package:cilekhavuz/api/api.dart';
 import 'package:cilekhavuz/models/ModuleTasks.dart';
-import 'package:cilekhavuz/pages/shared/boxtile.dart';
 import 'package:cilekhavuz/pages/shared/header.dart';
-import 'package:cilekhavuz/utils/constants.dart';
-
+import 'package:cilekhavuz/utils/utils.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -24,6 +23,79 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
+    initializeDateFormatting();
+  }
+
+  Widget taskWidget(ModuleTasks item) {
+    Color? statusColor =
+        Utils.hexOrRGBToColor(item.eventStatusValue!.colorCode!);
+    return Container(
+      margin: const EdgeInsets.all(12).copyWith(top: 0),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+              right: BorderSide(color: Colors.grey.shade200, width: 1),
+              top: BorderSide(color: Colors.grey.shade200, width: 1),
+              bottom: BorderSide(color: Colors.grey.shade200, width: 1),
+              left: BorderSide(
+                  color:
+                     statusColor,
+                  width: 5))),
+      child: Padding(
+        padding: const EdgeInsets.all(14.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircularPercentIndicator(
+                  animation: true,
+                  animationDuration: 2000,
+                  radius: 15.0,
+                  lineWidth: 3.0,
+                  percent: item.taskProgress!=-1?(item.taskProgress!/100):0,
+                  progressColor: statusColor,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.all(6).copyWith(left: 12, right: 12),
+                  child: Text(
+                    item.eventStatusName!,
+                    style:  TextStyle(
+                        color: statusColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 14,
+            ),
+            Text(
+              item.name!,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            const Text(
+                "Mikserlerin Taşıyıcıya yüklenip inşaat alanına gerekli yerlere transfer edilmesi ve yakıt elektririk gibi kaynakların sağlanıp çalışmaya hazır hale getirilmesi.",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis),
+            const SizedBox(
+              height: 12,
+            ),
+            Text(
+              item.startDate != null
+                  ? DateFormat('dd MMMM yyyy HH:mm', "tr")
+                      .format(DateTime.parse(item.startDate!))
+                  : "Bilinmiyor",
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // @override
@@ -409,54 +481,60 @@ class _DashboardState extends State<Dashboard> {
   // }
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(14),
-      shrinkWrap: true,
-      children: [
-        FutureBuilder<List<ModuleTasks>>(
-          future:
-              API.workSteps(), // a previously-obtained Future<String> or null
-          builder: (BuildContext context,
-              AsyncSnapshot<List<ModuleTasks>> snapshot) {
-            List<Widget> children;
-            if (snapshot.hasData) {
-              children = <Widget>[
-                for (var item in snapshot.data!) BoxTile(title: Text(item.name!))
-              ];
-            } else if (snapshot.hasError) {
-              children = <Widget>[
-                const Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                  size: 60,
+    return Scaffold(
+      body: ListView(
+        padding: const EdgeInsets.all(14),
+        shrinkWrap: true,
+        children: [
+          Header(
+            title: "Görevler",
+            trailing: IconButton(
+                onPressed: () {}, icon: const Icon(LineIcons.search)),
+          ),
+          FutureBuilder<List<ModuleTasks>>(
+            future:
+                API.workSteps(), // a previously-obtained Future<String> or null
+            builder: (BuildContext context,
+                AsyncSnapshot<List<ModuleTasks>> snapshot) {
+              List<Widget> children;
+              if (snapshot.hasData) {
+                children = <Widget>[
+                  for (var item in snapshot.data!) taskWidget(item)
+                ];
+              } else if (snapshot.hasError) {
+                children = <Widget>[
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text('Error: ${snapshot.error}'),
+                  ),
+                ];
+              } else {
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height - 200,
+                  child: const Center(
+                    child: SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                );
+              }
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: children,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Text('Error: ${snapshot.error}'),
-                ),
-              ];
-            } else {
-              children = const <Widget>[
-                SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 16),
-                  child: Text('Awaiting result...'),
-                ),
-              ];
-            }
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: children,
-              ),
-            );
-          },
-        ),
-      ],
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
