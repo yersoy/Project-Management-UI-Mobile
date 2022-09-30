@@ -44,10 +44,8 @@ class _ReportsState extends State<Reports> {
                 ),
                 series: <ChartSeries>[
                   ColumnSeries<ChartData, String>(
-                      dataLabelSettings: DataLabelSettings(
-                          textStyle: GoogleFonts.quicksand(), isVisible: true),
-                      dataLabelMapper: (ChartData data, _) =>
-                          data.y.toStringAsFixed(0),
+                      dataLabelSettings: DataLabelSettings(textStyle: GoogleFonts.quicksand(), isVisible: true),
+                      dataLabelMapper: (ChartData data, _) => data.y.toStringAsFixed(0),
                       dataSource: chartData,
                       pointColorMapper: (ChartData data, _) => data.color,
                       xValueMapper: (ChartData data, _) => data.x,
@@ -58,7 +56,7 @@ class _ReportsState extends State<Reports> {
         Header(
           title: "Tamamlanan Projeler",
           trailing: Container(
-              padding: const EdgeInsets.all(8).copyWith(top: 4,bottom: 4),
+            padding: const EdgeInsets.all(8).copyWith(top: 4, bottom: 4),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
               color: Colors.green,
@@ -75,8 +73,7 @@ class _ReportsState extends State<Reports> {
             Navigator.pushNamed(context, Routes.PROJECTS);
           },
           leading: Container(
-            decoration: BoxDecoration(
-                color: Colors.blue, borderRadius: BorderRadius.circular(4)),
+            decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(4)),
             width: 40,
             height: 40,
             child: const Center(
@@ -106,8 +103,7 @@ class _ReportsState extends State<Reports> {
             Navigator.pushNamed(context, Routes.PROJECTS);
           },
           leading: Container(
-            decoration: BoxDecoration(
-                color: Colors.red, borderRadius: BorderRadius.circular(4)),
+            decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(4)),
             width: 40,
             height: 40,
             child: const Center(
@@ -137,8 +133,7 @@ class _ReportsState extends State<Reports> {
             Navigator.pushNamed(context, Routes.PROJECTS);
           },
           leading: Container(
-            decoration: BoxDecoration(
-                color: Colors.blueGrey, borderRadius: BorderRadius.circular(4)),
+            decoration: BoxDecoration(color: Colors.blueGrey, borderRadius: BorderRadius.circular(4)),
             width: 40,
             height: 40,
             child: const Center(
@@ -165,7 +160,7 @@ class _ReportsState extends State<Reports> {
         Header(
           title: "Bekleyen Projeler",
           trailing: Container(
-            padding: const EdgeInsets.all(8).copyWith(top: 4,bottom: 4),
+            padding: const EdgeInsets.all(8).copyWith(top: 4, bottom: 4),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
               color: Colors.blue,
@@ -182,8 +177,7 @@ class _ReportsState extends State<Reports> {
             Navigator.pushNamed(context, Routes.PROJECTS);
           },
           leading: Container(
-            decoration: BoxDecoration(
-                color: Colors.blue, borderRadius: BorderRadius.circular(4)),
+            decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(4)),
             width: 40,
             height: 40,
             child: const Center(
@@ -213,8 +207,7 @@ class _ReportsState extends State<Reports> {
             Navigator.pushNamed(context, Routes.PROJECTS);
           },
           leading: Container(
-            decoration: BoxDecoration(
-                color: Colors.red, borderRadius: BorderRadius.circular(4)),
+            decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(4)),
             width: 40,
             height: 40,
             child: const Center(
@@ -244,8 +237,7 @@ class _ReportsState extends State<Reports> {
             Navigator.pushNamed(context, Routes.PROJECTS);
           },
           leading: Container(
-            decoration: BoxDecoration(
-                color: Colors.blueGrey, borderRadius: BorderRadius.circular(4)),
+            decoration: BoxDecoration(color: Colors.blueGrey, borderRadius: BorderRadius.circular(4)),
             width: 40,
             height: 40,
             child: const Center(

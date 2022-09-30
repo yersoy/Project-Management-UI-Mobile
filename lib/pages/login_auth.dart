@@ -1,3 +1,8 @@
+import 'dart:convert';
+
+import 'package:cilekhavuz/api/api.dart';
+import 'package:cilekhavuz/api/base.dart';
+import 'package:cilekhavuz/models/AuthModel.dart';
 import 'package:cilekhavuz/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +15,9 @@ class LoginAuth extends StatefulWidget {
 }
 
 class _LoginAuthState extends State<LoginAuth> {
+  String username = "";
+  String password = "";
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,6 +47,9 @@ class _LoginAuthState extends State<LoginAuth> {
                 child: Column(
                   children: [
                     TextField(
+                      onChanged: (val) {
+                        username = val;
+                      },
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         fillColor: Colors.grey.shade100,
@@ -54,6 +65,12 @@ class _LoginAuthState extends State<LoginAuth> {
                     ),
                     TextField(
                       obscureText: true,
+                      onChanged: (val) {
+                        password = val;
+                      },
+                      onSubmitted: (val) {
+                        BASE.login(username, password, context);
+                      },
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade100,
@@ -76,7 +93,9 @@ class _LoginAuthState extends State<LoginAuth> {
                           child: IconButton(
                             color: Colors.white,
                             icon: const Icon(Icons.arrow_forward),
-                            onPressed: () => {Navigator.pushNamedAndRemoveUntil(context, Routes.DASHBOARD, (route) => false)},
+                            onPressed: () {
+                              BASE.login(username, password, context);
+                            },
                           ),
                         )
                       ],

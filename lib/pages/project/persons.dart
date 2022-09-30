@@ -29,13 +29,17 @@ class _TaskPersonsState extends State<TaskPersons> {
         trailing: Wrap(
           children: [
             IconButton(
-                onPressed: () {_launchUrl("mailto:yersoy@ritma.com.tr");},
+                onPressed: () {
+                  _launchUrl("mailto:yersoy@ritma.com.tr");
+                },
                 icon: const Icon(
                   LineIcons.envelope,
                   color: Colors.blue,
                 )),
             IconButton(
-                onPressed: () {_launchUrl("tel:+905425123667");},
+                onPressed: () {
+                  _launchUrl("tel:+905425123667");
+                },
                 icon: const Icon(
                   LineIcons.phone,
                   color: Colors.green,
@@ -57,13 +61,17 @@ class _TaskPersonsState extends State<TaskPersons> {
         trailing: Wrap(
           children: [
             IconButton(
-                onPressed: () {_launchUrl("mailto:yersoy@ritma.com.tr");},
+                onPressed: () {
+                  _launchUrl("mailto:yersoy@ritma.com.tr");
+                },
                 icon: const Icon(
                   LineIcons.envelope,
                   color: Colors.blue,
                 )),
             IconButton(
-                onPressed: () {_launchUrl("tel:+905425123667");},
+                onPressed: () {
+                  _launchUrl("tel:+905425123667");
+                },
                 icon: const Icon(
                   LineIcons.phone,
                   color: Colors.green,
@@ -85,13 +93,17 @@ class _TaskPersonsState extends State<TaskPersons> {
         trailing: Wrap(
           children: [
             IconButton(
-                onPressed: () {_launchUrl("mailto:yersoy@ritma.com.tr");},
+                onPressed: () {
+                  _launchUrl("mailto:yersoy@ritma.com.tr");
+                },
                 icon: const Icon(
                   LineIcons.envelope,
                   color: Colors.blue,
                 )),
             IconButton(
-                onPressed: () {_launchUrl("tel:+905425123667");},
+                onPressed: () {
+                  _launchUrl("tel:+905425123667");
+                },
                 icon: const Icon(
                   LineIcons.phone,
                   color: Colors.green,
@@ -113,13 +125,17 @@ class _TaskPersonsState extends State<TaskPersons> {
         trailing: Wrap(
           children: [
             IconButton(
-                onPressed: () {_launchUrl("mailto:yersoy@ritma.com.tr");},
+                onPressed: () {
+                  _launchUrl("mailto:yersoy@ritma.com.tr");
+                },
                 icon: const Icon(
                   LineIcons.envelope,
                   color: Colors.blue,
                 )),
             IconButton(
-                onPressed: () {_launchUrl("tel:+905425123667");},
+                onPressed: () {
+                  _launchUrl("tel:+905425123667");
+                },
                 icon: const Icon(
                   LineIcons.phone,
                   color: Colors.green,
@@ -136,4 +152,3 @@ Future<void> _launchUrl(String url) async {
     throw 'Could not launch';
   }
 }
-

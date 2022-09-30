@@ -1,3 +1,5 @@
+import 'package:cilekhavuz/api/base.dart';
+import 'package:cilekhavuz/models/AuthModel.dart';
 import 'package:cilekhavuz/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -12,8 +14,17 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      String push = Routes.AUTHENTICATION;
+    loginFunc();
+  }
+
+  Future<void> loginFunc() async {
+    await BASE.getUser().then((user) {
+      String push;
+      if (user != null) {
+        push = Routes.DASHBOARD;
+      } else {
+        push = Routes.AUTHENTICATION;
+      }
       Navigator.of(context).pushNamedAndRemoveUntil(push, (route) => route.isCurrent && ModalRoute.of(context)!.settings.name == push ? false : true);
     });
   }

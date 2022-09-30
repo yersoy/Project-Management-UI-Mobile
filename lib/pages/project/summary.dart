@@ -40,12 +40,9 @@ class _SummaryState extends State<Summary> {
                   explode: true,
                   explodeIndex: 0,
                   pointColorMapper: (ChartData data, _) => data.color,
-                  dataLabelSettings: DataLabelSettings(
-                      textStyle: GoogleFonts.quicksand(),
-                      isVisible: true,
-                      labelPosition: ChartDataLabelPosition.outside),
-                  dataLabelMapper: (ChartData data, _) =>
-                      "${data.y.toStringAsFixed(0)} Görev",
+                  dataLabelSettings:
+                      DataLabelSettings(textStyle: GoogleFonts.quicksand(), isVisible: true, labelPosition: ChartDataLabelPosition.outside),
+                  dataLabelMapper: (ChartData data, _) => "${data.y.toStringAsFixed(0)} Görev",
                   xValueMapper: (ChartData data, _) => data.x,
                   yValueMapper: (ChartData data, _) => data.y)
             ]),
@@ -80,14 +77,10 @@ class _SummaryState extends State<Summary> {
                       progressColor: const Color(0xff009ef7),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.all(6).copyWith(left: 12, right: 12),
+                      padding: const EdgeInsets.all(6).copyWith(left: 12, right: 12),
                       child: const Text(
                         'AKTİF',
-                        style: TextStyle(
-                            color: Color(0xff009ef7),
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Color(0xff009ef7), fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -141,14 +134,10 @@ class _SummaryState extends State<Summary> {
                       progressColor: Colors.green,
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.all(6).copyWith(left: 12, right: 12),
+                      padding: const EdgeInsets.all(6).copyWith(left: 12, right: 12),
                       child: const Text(
                         'TAMAMLANDI',
-                        style: TextStyle(
-                            color: Color(0xff50cd89),
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Color(0xff50cd89), fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],

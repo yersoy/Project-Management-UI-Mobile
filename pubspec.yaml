@@ -46,7 +46,9 @@ dependencies:
   timelines: ^0.1.0
   badges: ^2.0.3
   image_picker: ^0.8.5+3
-  
+  shared_preferences: ^2.0.15
+  another_flushbar: ^1.12.29
+
   flutter_datetime_picker:
     git:
       url: https://github.com/AlexHartford/flutter_datetime_picker.git
