@@ -115,15 +115,11 @@ class ModuleTasks {
     isRequiredVideo = json['isRequiredVideo'];
     eventStatusId = json['eventStatusId'];
     eventStatusName = json['eventStatusName'];
-    eventStatusValue = json['eventStatusValue'] != null
-        ? EventStatusValue.fromJson(jsonDecode(json['eventStatusValue']))
-        : null;
+    eventStatusValue = json['eventStatusValue'] != null ? EventStatusValue.fromJson(jsonDecode(json['eventStatusValue'])) : null;
     createdDate = json['createdDate'];
     isDeleted = json['isDeleted'];
     recorderContactPersonAccountId = json['recorderContactPersonAccountId'];
-    viewModuleTaskFiles = json['viewModuleTaskFiles'] != null
-        ? ViewModuleTaskFiles.fromJson(json['viewModuleTaskFiles'])
-        : null;
+    viewModuleTaskFiles = json['viewModuleTaskFiles'] != null ? ViewModuleTaskFiles.fromJson(json['viewModuleTaskFiles']) : null;
     commentCount = json['commentCount'];
     documentFileCount = json['documentFileCount'];
     imageFileCount = json['imageFileCount'];

@@ -1,22 +1,26 @@
+import 'package:cilekhavuz/models/ModuleTasks.dart';
 import 'package:cilekhavuz/models/tasktatus.dart';
 import 'package:cilekhavuz/pages/shared/boxtile.dart';
+import 'package:cilekhavuz/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:html/parser.dart';
+
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Task extends StatefulWidget {
-  const Task({Key? key}) : super(key: key);
+  final ModuleTasks task;
+  const Task({Key? key, required this.task}) : super(key: key);
 
   @override
   State<Task> createState() => _TaskState();
 }
 
 class _TaskState extends State<Task> {
-  DateTime startDate = DateTime.parse("2022-02-02 00:00:00");
-  DateTime endDate = DateTime.parse("2022-09-27 13:27:00");
+  DateTime? startDate;
+  DateTime? endDate;
 
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
@@ -25,7 +29,7 @@ class _TaskState extends State<Task> {
 
   YoutubePlayerController? _controller;
 
-  double taskPercent = 50.0;
+  double taskPercent = 0.0;
 
   TaskStatus? dropdownValue;
   final ImagePicker _picker = ImagePicker();
@@ -39,11 +43,25 @@ class _TaskState extends State<Task> {
   @override
   void initState() {
     super.initState();
-    startDateController.text = DateFormat("d.MM.yyyy").format(startDate);
-    endDateController.text = DateFormat("d.MM.yyyy HH:mm").format(endDate);
+    if (widget.task.startDate != null) {
+      startDate = DateTime.parse(widget.task.startDate!);
+      startDateController.text = DateFormat("d.MM.yyyy").format(startDate!);
+    } else {
+      startDateController.text = "Belirlenmedi";
+    }
+    if (widget.task.endDate != null) {
+      endDate = DateTime.parse(widget.task.endDate!);
+      endDateController.text = DateFormat("d.MM.yyyy HH:mm").format(endDate!);
+    } else {
+      endDateController.text = "Belirlenmedi";
+    }
+    if (widget.task.taskProgress! > 0) {
+      taskPercent = widget.task.taskProgress!.toDouble();
+    }
     _controller = YoutubePlayerController(
       flags: const YoutubePlayerFlags(autoPlay: false),
-      initialVideoId: YoutubePlayer.convertUrlToId("https://www.youtube.com/watch?v=YXa8qsC5xws&ab_channel=howtopaintinfo")!,
+      initialVideoId: YoutubePlayer.convertUrlToId(
+          "https://www.youtube.com/watch?v=YXa8qsC5xws&ab_channel=howtopaintinfo")!,
     );
     dropdownValue = taskStatusList.first;
   }
@@ -65,23 +83,27 @@ class _TaskState extends State<Task> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Mikserlerin Getirilmesi",
-              style: TextStyle(color: Colors.black),
+            Text(
+              widget.task.name!,
+              style: const TextStyle(color: Colors.black),
             ),
             Row(
               children: [
                 Container(
                   width: 8,
                   height: 8,
-                  decoration: const BoxDecoration(color: Color(0xff4800ff), borderRadius: BorderRadius.all(Radius.circular(20))),
+                  decoration: BoxDecoration(
+                      color: Utils.hexOrRGBToColor(
+                          widget.task.eventStatusValue!.colorCode!),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(20))),
                 ),
                 const SizedBox(
                   width: 4,
                 ),
-                const Text(
-                  "BETON ATMA",
-                  style: TextStyle(color: Colors.black, fontSize: 12),
+                Text(
+                  widget.task.workStepName!,
+                  style: const TextStyle(color: Colors.black, fontSize: 12),
                 ),
               ],
             ),
@@ -102,7 +124,7 @@ class _TaskState extends State<Task> {
                     controller: startDateController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
-                      labelText: 'Başlangıç Tarihi',
+                      labelText: 'BAŞLANGIÇ TARİHİ',
                     ),
                   ),
                 ),
@@ -116,22 +138,27 @@ class _TaskState extends State<Task> {
                     controller: endDateController,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
-                      labelText: 'Bitiş Tarihi',
+                      labelText: 'BİTİŞ TARİHİ',
                     ),
                   ),
                 ),
               )
             ],
           ),
+          parse(widget.task.description!).documentElement!.text.isNotEmpty
+              ? BoxTile(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  title: Text(
+                      parse(widget.task.description!).documentElement!.text))
+              : const SizedBox(),
           BoxTile(
             margin: const EdgeInsets.only(bottom: 8),
             title: TextFormField(
               maxLines: 5,
-              initialValue:
-                  "Duvarları boyamadan önce pürüzler giderildi.Alçı ile delikler kapatıldı ve temiz bir çalışma alanı oluşturuldukdan sonra duvarlar önce beyaza sonrada maviye boyandı. Kuruması için 24 Saat Gerekli.",
+              minLines: 1,
               decoration: const InputDecoration(
                 border: InputBorder.none,
-                labelText: 'Açıklama',
+                labelText: 'Açıklama Giriniz',
               ),
             ),
           ),
@@ -144,10 +171,12 @@ class _TaskState extends State<Task> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(14.0).copyWith(bottom: 0, left: 20),
+                    padding: const EdgeInsets.all(14.0)
+                        .copyWith(bottom: 0, left: 20),
                     child: Text(
-                      "Görev Yüzdesi",
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+                      "YAPILAN GÖREVİN YÜZDESİ",
+                      style:
+                          TextStyle(fontSize: 12, color: Colors.grey.shade700),
                     ),
                   ),
                   Slider(
@@ -156,7 +185,11 @@ class _TaskState extends State<Task> {
                     value: taskPercent,
                     divisions: 10,
                     label: "$taskPercent",
-                    activeColor: dropdownValue!.color,
+                    activeColor: Utils.hexOrRGBToColor(
+                        widget.task.eventStatusValue!.colorCode!),
+                    inactiveColor: Utils.hexOrRGBToColor(
+                            widget.task.eventStatusValue!.colorCode!)
+                        .withOpacity(0.2),
                     onChanged: (value) {
                       setState(() {
                         taskPercent = value;
@@ -167,11 +200,13 @@ class _TaskState extends State<Task> {
               )),
           BoxTile(
             onTap: () async {
-              XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+              XFile? image =
+                  await _picker.pickImage(source: ImageSource.gallery);
             },
             trailing: IconButton(
               onPressed: () async {
-                XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+                XFile? image =
+                    await _picker.pickImage(source: ImageSource.gallery);
               },
               icon: const Icon(
                 LineIcons.plus,
@@ -185,7 +220,8 @@ class _TaskState extends State<Task> {
           ),
           BoxTile(
             onTap: () async {
-              XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+              XFile? image =
+                  await _picker.pickImage(source: ImageSource.gallery);
             },
             trailing: IconButton(
               onPressed: () {},
@@ -199,7 +235,8 @@ class _TaskState extends State<Task> {
           ),
           BoxTile(
             onTap: () async {
-              XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+              XFile? image =
+                  await _picker.pickImage(source: ImageSource.gallery);
             },
             trailing: IconButton(
               onPressed: () {},
@@ -228,7 +265,14 @@ class _TaskState extends State<Task> {
               ),
             ],
           ),
-          ElevatedButton(style: ElevatedButton.styleFrom(primary: dropdownValue?.color), onPressed: () {}, child: const Text("Onaya Gönder"))
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: Utils.hexOrRGBToColor(
+                      widget.task.eventStatusValue!.colorCode!)),
+              onPressed: () {},
+              child: Text(widget.task.eventStatusValue!.name != null
+                  ? widget.task.eventStatusValue!.name!
+                  : "Tamamla"))
         ],
       ),
     );

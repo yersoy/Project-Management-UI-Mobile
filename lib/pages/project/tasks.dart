@@ -1,3 +1,4 @@
+import 'package:cilekhavuz/models/ModuleTasks.dart';
 import 'package:cilekhavuz/pages/project/task.dart';
 import 'package:cilekhavuz/pages/shared/boxtile.dart';
 import 'package:cilekhavuz/utils/constants.dart';
@@ -18,7 +19,7 @@ class _TasksState extends State<Tasks> {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const Task()),
+            MaterialPageRoute(builder: (context) => Task(task: new ModuleTasks())),
           );
         },
         child: Container(
