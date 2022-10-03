@@ -17,8 +17,8 @@ class ModuleTasks {
   String? realEndDate;
   int? taskProgress;
   int? orderNo;
-  String? auditorApprovalEventStatus;
-  String? contactApprovalEventStatus;
+  EventStatusValue? auditorApprovalEventStatus;
+  EventStatusValue? contactApprovalEventStatus;
   String? ritmaDriveFolderId;
   String? auditorPersonIds;
   String? auditorContactIds;
@@ -188,6 +188,9 @@ class EventStatusValue {
   bool? isLogging;
   bool? isEmail;
   bool? isActive;
+  bool? isExpired;
+  bool? isDefault;
+  bool? isWaitingApproval;
   String? personelIds;
   String? departmentIds;
   int? id;
@@ -204,13 +207,16 @@ class EventStatusValue {
       this.isLogging,
       this.isEmail,
       this.isActive,
+      this.isExpired,
       this.personelIds,
       this.departmentIds,
+      this.isWaitingApproval,
       this.id,
       this.name,
       this.value,
       this.description,
       this.descriptionEn,
+      this.isDefault,
       this.parent});
 
   EventStatusValue.fromJson(Map<String, dynamic> json) {
@@ -220,6 +226,9 @@ class EventStatusValue {
     isLogging = json['IsLogging'];
     isEmail = json['IsEmail'];
     isActive = json['IsActive'];
+    isExpired = json['IsExpired'];
+    isDefault = json['IsDefault'];
+    isWaitingApproval = json['IsWaitingApproval'];
     personelIds = json['PersonelIds'];
     departmentIds = json['DepartmentIds'];
     id = json['Id'];
@@ -238,7 +247,9 @@ class EventStatusValue {
     data['IsLogging'] = isLogging;
     data['IsEmail'] = isEmail;
     data['IsActive'] = isActive;
-    data['PersonelIds'] = personelIds;
+    data['IsDefault'] = isDefault;
+    data['IsExpired'] = isExpired;
+    data['IsWaitingApproval'] = isWaitingApproval;
     data['DepartmentIds'] = departmentIds;
     data['Id'] = id;
     data['Name'] = name;

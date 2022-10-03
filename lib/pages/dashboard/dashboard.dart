@@ -31,8 +31,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget taskWidget(ModuleTasks item) {
-    Color? statusColor =
-        Utils.hexOrRGBToColor(item.eventStatusValue!.colorCode!);
+    Color? statusColor = Utils.hexOrRGBToColor(item.eventStatusValue!.colorCode!);
 
     return Container(
       margin: const EdgeInsets.all(12).copyWith(top: 0),
@@ -65,20 +64,14 @@ class _DashboardState extends State<Dashboard> {
                       animationDuration: 2000,
                       radius: 15.0,
                       lineWidth: 3.0,
-                      percent: item.taskProgress != -1
-                          ? (item.taskProgress! / 100)
-                          : 0,
+                      percent: item.taskProgress != -1 ? (item.taskProgress! / 100) : 0,
                       progressColor: statusColor,
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.all(6).copyWith(left: 12, right: 12),
+                      padding: const EdgeInsets.all(6).copyWith(left: 12, right: 12),
                       child: Text(
                         item.eventStatusName!,
-                        style: TextStyle(
-                            color: statusColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
+                        style: TextStyle(color: statusColor, fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
@@ -93,17 +86,13 @@ class _DashboardState extends State<Dashboard> {
                 const SizedBox(
                   height: 8,
                 ),
-                Text(item.workStepName!,
-                    maxLines: 2, overflow: TextOverflow.ellipsis),
+                Text(item.workStepName!, maxLines: 2, overflow: TextOverflow.ellipsis),
                 item.startDate != null
                     ? const SizedBox(
                         height: 12,
                       )
                     : const SizedBox(),
-                item.startDate != null
-                    ? Text(DateFormat('dd MMMM yyyy HH:mm', "tr")
-                        .format(DateTime.parse(item.startDate!)))
-                    : const SizedBox(),
+                item.startDate != null ? Text(DateFormat('dd MMMM yyyy HH:mm', "tr").format(DateTime.parse(item.startDate!))) : const SizedBox(),
               ],
             ),
           ),
@@ -502,18 +491,14 @@ class _DashboardState extends State<Dashboard> {
         children: [
           Header(
             title: "Görevler",
-            trailing: IconButton(
-                onPressed: () {}, icon: const Icon(LineIcons.search)),
+            trailing: IconButton(onPressed: () {}, icon: const Icon(LineIcons.search)),
           ),
           FutureBuilder<List<ModuleTasks>>(
             future: data, // a previously-obtained Future<String> or null
-            builder: (BuildContext context,
-                AsyncSnapshot<List<ModuleTasks>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<List<ModuleTasks>> snapshot) {
               List<Widget> children;
               if (snapshot.hasData) {
-                children = <Widget>[
-                  for (var item in snapshot.data!) taskWidget(item)
-                ];
+                children = <Widget>[for (var item in snapshot.data!) taskWidget(item)];
               } else if (snapshot.hasError) {
                 children = <Widget>[
                   const Icon(

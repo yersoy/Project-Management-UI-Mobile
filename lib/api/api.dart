@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 class API {
   static String tenantName = "sisel";
-  static String url = "192.168.1.3:45459";
+  static String url = "192.168.1.50:45455";
   static int taskcount = 0;
   static Future<AuthModel> login(String username, String password) async {
     final response = await http.post(
