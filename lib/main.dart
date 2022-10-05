@@ -1,6 +1,5 @@
 import 'package:cilekhavuz/pages/dashboard/dashboard.dart';
 import 'package:cilekhavuz/pages/login_auth.dart';
-import 'package:cilekhavuz/pages/main.dart';
 import 'package:cilekhavuz/pages/project/project.dart';
 import 'package:cilekhavuz/pages/splash.dart';
 import 'package:cilekhavuz/utils/constants.dart';

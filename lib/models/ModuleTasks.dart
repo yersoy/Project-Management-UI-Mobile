@@ -1,13 +1,15 @@
 import 'dart:convert';
 
+import 'package:cilekhavuz/models/Person.dart';
+
 class ModuleTasks {
-  String? $id;
+
   int? tableId;
   int? primaryId;
   int? workStepId;
   String? description;
-  String? personIds;
-  String? contactIds;
+  List<Person>? personIds;
+  List<Person>? contactIds;
   String? workStepName;
   String? deadlineStartDate;
   String? deadlineEndDate;
@@ -20,8 +22,8 @@ class ModuleTasks {
   EventStatusValue? auditorApprovalEventStatus;
   EventStatusValue? contactApprovalEventStatus;
   String? ritmaDriveFolderId;
-  String? auditorPersonIds;
-  String? auditorContactIds;
+  List<Person>? auditorPersonIds;
+  List<Person>? auditorContactIds;
   bool? isAuditorApprovalRequired;
   bool? isRelatedContactApprovalRequired;
   bool? isRequiredFile;
@@ -44,7 +46,7 @@ class ModuleTasks {
   int? contactId;
 
   ModuleTasks(
-      {this.$id,
+      {
       this.tableId,
       this.primaryId,
       this.workStepId,
@@ -87,13 +89,25 @@ class ModuleTasks {
       this.contactId});
 
   ModuleTasks.fromJson(Map<String, dynamic> json) {
-    id = json['$id'];
+    id = json['id'];
     tableId = json['tableId'];
     primaryId = json['primaryId'];
     workStepId = json['workStepId'];
     description = json['description'];
-    personIds = json['personIds'];
-    contactIds = json['contactIds'];
+    personIds = json['personIds'] != null
+        ? List<Person>.from(
+            jsonDecode(json['personIds']).map(
+              (model) => model!=null? Person.fromJson(model):Person(),
+            ),
+          ).toList()
+        : null;
+    contactIds = json['contactIds'] != null
+        ? List<Person>.from(
+            jsonDecode(json['contactIds']).map(
+              (model) => model!=null? Person.fromJson(model):Person(),
+            ),
+          ).toList()
+        : null;
     workStepName = json['workStepName'];
     deadlineStartDate = json['deadlineStartDate'];
     deadlineEndDate = json['deadlineEndDate'];
@@ -103,11 +117,23 @@ class ModuleTasks {
     realEndDate = json['realEndDate'];
     taskProgress = json['taskProgress'];
     orderNo = json['orderNo'];
-    auditorApprovalEventStatus = json['auditorApprovalEventStatus'];
-    contactApprovalEventStatus = json['contactApprovalEventStatus'];
+    auditorApprovalEventStatus = json['auditorApprovalEventStatus'] != null ? EventStatusValue.fromJson(jsonDecode(json['auditorApprovalEventStatus'])) : null;
+    contactApprovalEventStatus =json['contactApprovalEventStatus'] != null ? EventStatusValue.fromJson(jsonDecode(json['contactApprovalEventStatus'])) : null;
     ritmaDriveFolderId = json['ritmaDriveFolderId'];
-    auditorPersonIds = json['auditorPersonIds'];
-    auditorContactIds = json['auditorContactIds'];
+    auditorPersonIds = json['auditorPersonIds'] != null
+        ? List<Person>.from(
+            jsonDecode(json['auditorPersonIds']).map(
+              (model) => Person.fromJson(model),
+            ),
+          ).toList()
+        : null;
+    auditorContactIds = json['auditorContactIds'] != null
+        ? List<Person>.from(
+            jsonDecode(json['auditorContactIds']).map(
+              (model) => Person.fromJson(model),
+            ),
+          ).toList()
+        : null;
     isAuditorApprovalRequired = json['isAuditorApprovalRequired'];
     isRelatedContactApprovalRequired = json['isRelatedContactApprovalRequired'];
     isRequiredFile = json['isRequiredFile'];
@@ -125,13 +151,13 @@ class ModuleTasks {
     imageFileCount = json['imageFileCount'];
     videoFileCount = json['videoFileCount'];
     extended = json['extended'];
-    id = json['id'];
+  
     name = json['name'];
     contactId = json['contactId'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['$id'] = id;
     data['tableId'] = tableId;
     data['primaryId'] = primaryId;
@@ -240,7 +266,7 @@ class EventStatusValue {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['OrderNo'] = orderNo;
     data['ColorCode'] = colorCode;
     data['IsSms'] = isSms;

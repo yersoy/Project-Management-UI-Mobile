@@ -19,7 +19,11 @@ class _TasksState extends State<Tasks> {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Task(task: new ModuleTasks())),
+            MaterialPageRoute(
+                builder: (context) => Task(
+                      task: new ModuleTasks(),
+                      isAuthorized: true,
+                    )),
           );
         },
         child: Container(

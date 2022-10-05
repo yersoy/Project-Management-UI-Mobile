@@ -25,7 +25,7 @@ class _SplashState extends State<Splash> {
       } else {
         push = Routes.AUTHENTICATION;
       }
-      Navigator.of(context).pushNamedAndRemoveUntil(push, (route) => route.isCurrent && ModalRoute.of(context)!.settings.name == push ? false : true);
+      Navigator.of(context).pushReplacementNamed(push);
     });
   }
 
