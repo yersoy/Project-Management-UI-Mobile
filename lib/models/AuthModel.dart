@@ -6,13 +6,13 @@ class AuthModel {
   bool? success;
   bool? failure;
   int? validationEnum;
-  Null? paginationInfo;
+  String? paginationInfo;
 
   AuthModel({this.id, this.data, this.status, this.message, this.success, this.failure, this.validationEnum, this.paginationInfo});
 
   AuthModel.fromJson(Map<String, dynamic> json) {
     id = json['$id'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
     status = json['status'];
     message = json['message'];
     success = json['success'];
@@ -22,17 +22,17 @@ class AuthModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['$id'] = this.id;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['$id'] = id;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
-    data['status'] = this.status;
-    data['message'] = this.message;
-    data['success'] = this.success;
-    data['failure'] = this.failure;
-    data['validationEnum'] = this.validationEnum;
-    data['paginationInfo'] = this.paginationInfo;
+    data['status'] = status;
+    data['message'] = message;
+    data['success'] = success;
+    data['failure'] = failure;
+    data['validationEnum'] = validationEnum;
+    data['paginationInfo'] = paginationInfo;
     return data;
   }
 }
@@ -95,30 +95,30 @@ class Data {
     mobilePhone2 = json['mobilePhone2'];
     isLoginable = json['isLoginable'];
     token = json['token'];
-    userAuths = json['userAuths'] != null ? new UserAuths.fromJson(json['userAuths']) : null;
+    userAuths = json['userAuths'] != null ? UserAuths.fromJson(json['userAuths']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['$id'] = this.id;
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['contactName'] = this.contactName;
-    data['contactId'] = this.contactId;
-    data['subscriberId'] = this.subscriberId;
-    data['title'] = this.title;
-    data['roleId'] = this.roleId;
-    data['isAdmin'] = this.isAdmin;
-    data['email'] = this.email;
-    data['username'] = this.username;
-    data['nameSurname'] = this.nameSurname;
-    data['image'] = this.image;
-    data['mobilePhone1'] = this.mobilePhone1;
-    data['mobilePhone2'] = this.mobilePhone2;
-    data['isLoginable'] = this.isLoginable;
-    data['token'] = this.token;
-    if (this.userAuths != null) {
-      data['userAuths'] = this.userAuths!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['$id'] = id;
+    data['id'] = id;
+    data['name'] = name;
+    data['contactName'] = contactName;
+    data['contactId'] = contactId;
+    data['subscriberId'] = subscriberId;
+    data['title'] = title;
+    data['roleId'] = roleId;
+    data['isAdmin'] = isAdmin;
+    data['email'] = email;
+    data['username'] = username;
+    data['nameSurname'] = nameSurname;
+    data['image'] = image;
+    data['mobilePhone1'] = mobilePhone1;
+    data['mobilePhone2'] = mobilePhone2;
+    data['isLoginable'] = isLoginable;
+    data['token'] = token;
+    if (userAuths != null) {
+      data['userAuths'] = userAuths!.toJson();
     }
     return data;
   }
@@ -133,18 +133,18 @@ class UserAuths {
 
   UserAuths.fromJson(Map<String, dynamic> json) {
     id = json['$id'];
-    modules = json['modules'] != null ? new Modules.fromJson(json['modules']) : null;
-    authorizeList = json['authorizeList'] != null ? new Modules.fromJson(json['authorizeList']) : null;
+    modules = json['modules'] != null ? Modules.fromJson(json['modules']) : null;
+    authorizeList = json['authorizeList'] != null ? Modules.fromJson(json['authorizeList']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['$id'] = this.id;
-    if (this.modules != null) {
-      data['modules'] = this.modules!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['$id'] = id;
+    if (modules != null) {
+      data['modules'] = modules!.toJson();
     }
-    if (this.authorizeList != null) {
-      data['authorizeList'] = this.authorizeList!.toJson();
+    if (authorizeList != null) {
+      data['authorizeList'] = authorizeList!.toJson();
     }
     return data;
   }
@@ -167,10 +167,10 @@ class Modules {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['$id'] = this.id;
-    if (this.values != null) {
-      data['$values'] = this.values!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['$id'] = id;
+    if (values != null) {
+      data['$values'] = values!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -206,16 +206,16 @@ class Extended {
 
   Extended.fromJson(Map<String, dynamic> json) {
     id = json['$id'];
-    create = json['create'] != null ? new Create.fromJson(json['create']) : null;
-    update = json['update'] != null ? new Update.fromJson(json['update']) : null;
+    create = json['create'] != null ? Create.fromJson(json['create']) : null;
+    update = json['update'] != null ? Update.fromJson(json['update']) : null;
     if (json['list'] != null) {
       list = <dynamic>[];
       json['list'].forEach((v) {
         list!.add(v);
       });
     }
-    delete = json['delete'] != null ? new Delete.fromJson(json['delete']) : null;
-    specialAuthorizations = json['specialAuthorizations'] != null ? new SpecialAuthorizations.fromJson(json['specialAuthorizations']) : null;
+    delete = json['delete'] != null ? Delete.fromJson(json['delete']) : null;
+    specialAuthorizations = json['specialAuthorizations'] != null ? SpecialAuthorizations.fromJson(json['specialAuthorizations']) : null;
     id = json['id'];
     name = json['name'];
     value = json['value'];
@@ -225,29 +225,29 @@ class Extended {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['$id'] = this.id;
-    if (this.create != null) {
-      data['create'] = this.create!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['$id'] = id;
+    if (create != null) {
+      data['create'] = create!.toJson();
     }
-    if (this.update != null) {
-      data['update'] = this.update!.toJson();
+    if (update != null) {
+      data['update'] = update!.toJson();
     }
-    if (this.list != null) {
-      data['list'] = this.list!.map((v) => v.toJson()).toList();
+    if (list != null) {
+      data['list'] = list!.map((v) => v.toJson()).toList();
     }
-    if (this.delete != null) {
-      data['delete'] = this.delete!.toJson();
+    if (delete != null) {
+      data['delete'] = delete!.toJson();
     }
-    if (this.specialAuthorizations != null) {
-      data['specialAuthorizations'] = this.specialAuthorizations!.toJson();
+    if (specialAuthorizations != null) {
+      data['specialAuthorizations'] = specialAuthorizations!.toJson();
     }
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['value'] = this.value;
-    data['description'] = this.description;
-    data['descriptionEn'] = this.descriptionEn;
-    data['parent'] = this.parent;
+    data['id'] = id;
+    data['name'] = name;
+    data['value'] = value;
+    data['description'] = description;
+    data['descriptionEn'] = descriptionEn;
+    data['parent'] = parent;
     return data;
   }
 }
@@ -274,14 +274,14 @@ class Create {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['$id'] = this.id;
-    data['create'] = this.create;
-    data['otherCreate'] = this.otherCreate;
-    data['blockCreate'] = this.blockCreate;
-    data['personal_Ids'] = this.personalIds;
-    data['departman_Ids'] = this.departmanIds;
-    data['contact_Ids'] = this.contactIds;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['$id'] = id;
+    data['create'] = create;
+    data['otherCreate'] = otherCreate;
+    data['blockCreate'] = blockCreate;
+    data['personal_Ids'] = personalIds;
+    data['departman_Ids'] = departmanIds;
+    data['contact_Ids'] = contactIds;
     return data;
   }
 }
@@ -308,14 +308,14 @@ class Update {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['$id'] = this.id;
-    data['update'] = this.update;
-    data['otherUpdate'] = this.otherUpdate;
-    data['blockUpdate'] = this.blockUpdate;
-    data['personal_Ids'] = this.personalIds;
-    data['departman_Ids'] = this.departmanIds;
-    data['contact_Ids'] = this.contactIds;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['$id'] = id;
+    data['update'] = update;
+    data['otherUpdate'] = otherUpdate;
+    data['blockUpdate'] = blockUpdate;
+    data['personal_Ids'] = personalIds;
+    data['departman_Ids'] = departmanIds;
+    data['contact_Ids'] = contactIds;
     return data;
   }
 }
@@ -342,14 +342,14 @@ class Delete {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['$id'] = this.id;
-    data['delete'] = this.delete;
-    data['otherDelete'] = this.otherDelete;
-    data['blockDelete'] = this.blockDelete;
-    data['personal_Ids'] = this.personalIds;
-    data['departman_Ids'] = this.departmanIds;
-    data['contact_Ids'] = this.contactIds;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['$id'] = id;
+    data['delete'] = delete;
+    data['otherDelete'] = otherDelete;
+    data['blockDelete'] = blockDelete;
+    data['personal_Ids'] = personalIds;
+    data['departman_Ids'] = departmanIds;
+    data['contact_Ids'] = contactIds;
     return data;
   }
 }
@@ -372,12 +372,12 @@ class SpecialAuthorizations {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['$id'] = this.id;
-    data['changeContact'] = this.changeContact;
-    data['approveOrRejectServiceProduct'] = this.approveOrRejectServiceProduct;
-    data['serviceChangeWorkOrder'] = this.serviceChangeWorkOrder;
-    data['offerLockOrUnlock'] = this.offerLockOrUnlock;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['$id'] = id;
+    data['changeContact'] = changeContact;
+    data['approveOrRejectServiceProduct'] = approveOrRejectServiceProduct;
+    data['serviceChangeWorkOrder'] = serviceChangeWorkOrder;
+    data['offerLockOrUnlock'] = offerLockOrUnlock;
     return data;
   }
 }

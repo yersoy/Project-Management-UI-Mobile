@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cilekhavuz/api/api.dart';
 import 'package:cilekhavuz/api/base.dart';
 import 'package:cilekhavuz/models/AuthModel.dart';
@@ -10,9 +12,10 @@ import 'package:cilekhavuz/utils/utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
-
+import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -49,6 +52,62 @@ class _TaskState extends State<Task> {
   List<XFile> videos = <XFile>[];
   AuthModel? user;
   List<FilePickerResult> files = <FilePickerResult>[];
+  Future<void> _launchUrl(_url) async {
+    //You can download a single file
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+    await FileDownloader.downloadFile(
+        url: _url,
+        onDownloadCompleted: (String path) {
+          Navigator.pop(context);
+          Utils.showDefaultSnackbar(
+              context,
+              "Başarıyla İndirildi",
+              const Icon(
+                LineIcons.download,
+                color: Colors.green,
+              ));
+        },
+        onDownloadError: (String error) {
+          Utils.showDefaultSnackbar(
+              context,
+              "Dosya İndirilemedi",
+              const Icon(
+                LineIcons.times,
+                color: Colors.red,
+              ));
+        });
+  }
+
+  Future uploadImage(XFile image) async {
+    await API.uploadDriveFileImage(widget.task, image, context);
+    setState(() {
+      images.add(image);
+    });
+  }
+
+  Future uploadFile(FilePickerResult file) async {
+    await API.uploadDriveFile(widget.task, file, context);
+    setState(() {
+      files.add(file);
+    });
+  }
+
+  Future<bool> deleteFile(String id) async {
+    return await API.deleteDriveFile(id).then((value) {
+      Utils.showDefaultSnackbar(
+          context,
+          "Dosya Başarıyla Temizlendi",
+          const Icon(
+            LineIcons.trash,
+            color: Colors.red,
+          ));
+      return true;
+    });
+  }
 
   Future editTask(ModuleTasks task, context) async {
     showDialog(
@@ -255,7 +314,10 @@ class _TaskState extends State<Task> {
                 backgroundColor: Utils.hexOrRGBToColor(
                     widget.task.eventStatusValue!.colorCode!)),
             onPressed: () {
-              submitTaskForApproval(widget.task, context);
+              var check = valideForm();
+              if (check) {
+                submitTaskForApproval(widget.task, context);
+              }
             },
             child: const Text("Onay İste"));
       } else if (widget.task.eventStatusValue!.isExpired != null &&
@@ -285,7 +347,10 @@ class _TaskState extends State<Task> {
                   backgroundColor: Utils.hexOrRGBToColor(
                       widget.task.eventStatusValue!.colorCode!)),
               onPressed: () {
-                completeTask(widget.task, context);
+                var check = valideForm();
+                if (check) {
+                  completeTask(widget.task, context);
+                }
               },
               child: const Text("Görevi Tamamla"))
         ],
@@ -341,6 +406,49 @@ class _TaskState extends State<Task> {
     }
 
     dropdownValue = taskStatusList.first;
+    if (widget.task.ritmaDriveFolderId != null) {
+      API
+          .getDriveFilebyId(
+              widget.task.ritmaDriveFolderId!, widget.task.primaryId!)
+          .then((value) {
+        for (var item in value.data!) {
+          switch (item.fileTypeId) {
+            case FileTypeIds.IMAGE:
+              XFile file = XFile(item.url!, name: item.name, mimeType: item.id);
+              setState(() {
+                images.add(file);
+              });
+              break;
+            case FileTypeIds.VIDEO:
+              XFile file = XFile(item.url!, name: item.name, mimeType: item.id);
+              setState(() {
+                videos.add(file);
+              });
+              break;
+
+            default:
+              List<PlatformFile> loaddedfiles = [
+                PlatformFile(
+                    path: item.url,
+                    name: item.name!,
+                    size: item.fileSizeInBytes!,
+                    identifier: item.id)
+              ];
+              FilePickerResult file = FilePickerResult(loaddedfiles);
+              setState(() {
+                files.add(file);
+              });
+          }
+        }
+      });
+    } else {
+      API.getDriveNewFolder(widget.task).then((value) async {
+        setState(() {
+          widget.task.ritmaDriveFolderId = value;
+        });
+        await API.workStepEdit(widget.task);
+      });
+    }
   }
 
   @override
@@ -501,9 +609,7 @@ class _TaskState extends State<Task> {
                         XFile? image = await _picker.pickImage(
                             source: ImageSource.gallery);
                         if (image != null) {
-                          setState(() {
-                            images.add(image);
-                          });
+                          uploadImage(image);
                         }
                       },
                       child: Wrap(
@@ -527,13 +633,26 @@ class _TaskState extends State<Task> {
                 : const SizedBox(),
             for (var image in images)
               BoxTile(
-                trailing: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      images.remove(image);
-                    });
-                  },
-                  icon: const Icon(LineIcons.times),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _launchUrl(image.path);
+                      },
+                      icon: const Icon(LineIcons.download),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        deleteFile(image.mimeType!).then((value) {
+                          setState(() {
+                            images.remove(image);
+                          });
+                        });
+                      },
+                      icon: const Icon(LineIcons.times),
+                    ),
+                  ],
                 ),
                 margin: const EdgeInsets.only(bottom: 8),
                 title: Text(
@@ -548,9 +667,9 @@ class _TaskState extends State<Task> {
                       onPressed: () async {
                         FilePickerResult? result =
                             await FilePicker.platform.pickFiles();
-                        setState(() {
-                          files.add(result!);
-                        });
+                        if (result != null) {
+                          uploadFile(result);
+                        }
                       },
                       child: Wrap(
                         runAlignment: WrapAlignment.center,
@@ -573,13 +692,26 @@ class _TaskState extends State<Task> {
                 : const SizedBox(),
             for (var file in files)
               BoxTile(
-                trailing: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      files.remove(file);
-                    });
-                  },
-                  icon: const Icon(LineIcons.times),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _launchUrl(file.files.first.path);
+                      },
+                      icon: const Icon(LineIcons.download),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        deleteFile(file.files.first.identifier!).then((value) {
+                          setState(() {
+                            files.remove(file);
+                          });
+                        });
+                      },
+                      icon: const Icon(LineIcons.times),
+                    ),
+                  ],
                 ),
                 margin: const EdgeInsets.only(bottom: 8),
                 title: Text(
@@ -596,10 +728,9 @@ class _TaskState extends State<Task> {
                             source: ImageSource.camera,
                             preferredCameraDevice: CameraDevice.rear,
                             maxDuration: const Duration(seconds: 30));
+
                         if (video != null) {
-                          setState(() {
-                            videos.add(video);
-                          });
+                          uploadImage(video);
                         }
                       },
                       child: Wrap(
@@ -620,13 +751,26 @@ class _TaskState extends State<Task> {
                 : const SizedBox(),
             for (var video in videos)
               BoxTile(
-                trailing: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      videos.remove(video);
-                    });
-                  },
-                  icon: const Icon(LineIcons.times),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _launchUrl(video.path);
+                      },
+                      icon: const Icon(LineIcons.download),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        deleteFile(video.mimeType!).then((value) {
+                          setState(() {
+                            videos.remove(video);
+                          });
+                        });
+                      },
+                      icon: const Icon(LineIcons.times),
+                    ),
+                  ],
                 ),
                 margin: const EdgeInsets.only(bottom: 8),
                 title: Text(

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cilekhavuz/models/Person.dart';
 
 class ModuleTasks {
-
   int? tableId;
   int? primaryId;
   int? workStepId;
@@ -46,8 +45,7 @@ class ModuleTasks {
   int? contactId;
 
   ModuleTasks(
-      {
-      this.tableId,
+      {this.tableId,
       this.primaryId,
       this.workStepId,
       this.description,
@@ -97,14 +95,14 @@ class ModuleTasks {
     personIds = json['personIds'] != null
         ? List<Person>.from(
             jsonDecode(json['personIds']).map(
-              (model) => model!=null? Person.fromJson(model):Person(),
+              (model) => model != null ? Person.fromJson(model) : Person(),
             ),
           ).toList()
         : null;
     contactIds = json['contactIds'] != null
         ? List<Person>.from(
             jsonDecode(json['contactIds']).map(
-              (model) => model!=null? Person.fromJson(model):Person(),
+              (model) => model != null ? Person.fromJson(model) : Person(),
             ),
           ).toList()
         : null;
@@ -117,8 +115,10 @@ class ModuleTasks {
     realEndDate = json['realEndDate'];
     taskProgress = json['taskProgress'];
     orderNo = json['orderNo'];
-    auditorApprovalEventStatus = json['auditorApprovalEventStatus'] != null ? EventStatusValue.fromJson(jsonDecode(json['auditorApprovalEventStatus'])) : null;
-    contactApprovalEventStatus =json['contactApprovalEventStatus'] != null ? EventStatusValue.fromJson(jsonDecode(json['contactApprovalEventStatus'])) : null;
+    auditorApprovalEventStatus =
+        json['auditorApprovalEventStatus'] != null ? EventStatusValue.fromJson(jsonDecode(json['auditorApprovalEventStatus'])) : null;
+    contactApprovalEventStatus =
+        json['contactApprovalEventStatus'] != null ? EventStatusValue.fromJson(jsonDecode(json['contactApprovalEventStatus'])) : null;
     ritmaDriveFolderId = json['ritmaDriveFolderId'];
     auditorPersonIds = json['auditorPersonIds'] != null
         ? List<Person>.from(
@@ -151,7 +151,7 @@ class ModuleTasks {
     imageFileCount = json['imageFileCount'];
     videoFileCount = json['videoFileCount'];
     extended = json['extended'];
-  
+
     name = json['name'];
     contactId = json['contactId'];
   }

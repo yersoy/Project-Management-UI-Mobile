@@ -50,8 +50,8 @@ dependencies:
   another_flushbar: ^1.12.29
   color_parser: ^0.0.3
   pull_to_refresh: ^2.0.0
-  
-  
+  flutter_file_downloader: ^1.1.0+1
+  dio: ^4.0.6
   html: ^0.15.0
 
   flutter_datetime_picker:

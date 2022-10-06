@@ -4,12 +4,19 @@ import 'dart:convert';
 import 'package:cilekhavuz/api/base.dart';
 import 'package:cilekhavuz/api/urls.dart';
 import 'package:cilekhavuz/models/AuthModel.dart';
+import 'package:cilekhavuz/models/FileResult.dart';
 import 'package:cilekhavuz/models/ModuleTasks.dart';
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class API {
   static String tenantName = "sisel";
-  static String url = "192.168.1.3:45455";
+  static String url = "zy.ritmaflex.com";
+  static String driveUrl = "195.142.132.122:3003";
+
   static int taskcount = 0;
   static Future<AuthModel> login(String username, String password) async {
     final response = await http.post(
@@ -22,6 +29,143 @@ class API {
         },
         body: json.encode({"userName": username, "value": password}));
     return AuthModel.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<String> getDriveToken() async {
+    final response = await http.get(
+      Uri.http(
+        driveUrl,
+        URL.driveGetToken,
+      ),
+      headers: <String, String>{
+        'Accept': 'text/plain',
+      },
+    );
+    return jsonDecode(response.body)["data"]["accessToken"];
+  }
+
+  static Future<bool> uploadDriveFile(
+      ModuleTasks task, FilePickerResult file, context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+    var token = await BASE.getDriveToken();
+    FormData formData = FormData.fromMap({
+      "FolderId": task.ritmaDriveFolderId,
+      "ContactId": task.contactId,
+      "RecorderContactPersonAccountId": task.recorderContactPersonAccountId,
+      "ModuleId": 2898,
+      "PrimaryId": task.primaryId,
+      "FileKeyType": 1,
+      "file": await MultipartFile.fromFile(file.files.first.path!,
+          filename: file.files.first.name),
+    });
+    Dio dio = Dio();
+    dio.options.baseUrl = "http://$driveUrl";
+    dio.options.headers['Content-Type'] = 'multipart/form-data';
+    dio.options.headers["Authorization"] = "Bearer $token";
+    dio.options.headers["x-api-version"] = "1.0";
+    dio.options.headers["Accept"] = 'application/json';
+
+    final response = await dio.post(URL.driveUploadFile, data: formData);
+    Navigator.pop(context);
+    return response.data["succeeded"];
+  }
+
+  static Future<bool> uploadDriveFileImage(ModuleTasks task, XFile file,context) async {
+     showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+    var token = await BASE.getDriveToken();
+    FormData formData = FormData.fromMap({
+      "FolderId": task.ritmaDriveFolderId,
+      "ContactId": task.contactId,
+      "RecorderContactPersonAccountId": task.recorderContactPersonAccountId,
+      "ModuleId": 2898,
+      "PrimaryId": task.primaryId,
+      "FileKeyType": 1,
+      "file": await MultipartFile.fromFile(file.path, filename: file.name),
+    });
+    Dio dio = Dio();
+    dio.options.baseUrl = "http://$driveUrl";
+    dio.options.headers['Content-Type'] = 'multipart/form-data';
+    dio.options.headers["Authorization"] = "Bearer $token";
+    dio.options.headers["x-api-version"] = "1.0";
+    dio.options.headers["Accept"] = 'application/json';
+
+    final response = await dio.post(URL.driveUploadFile, data: formData);
+    Navigator.pop(context);
+    return response.data["succeeded"];
+  }
+
+  static Future<bool> deleteDriveFile(String id) async {
+    var token = await BASE.getDriveToken();
+    final response = await http.delete(
+        Uri.http(
+          driveUrl,
+          URL.driveDeleteFile,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'text/json',
+          'Accept': 'text/json',
+          'Authorization': "Bearer $token",
+          'x-api-version': '1.0',
+        },
+        body: json.encode(id));
+    return jsonDecode(response.body)["succeeded"];
+  }
+
+  static Future<String> getDriveNewFolder(ModuleTasks task) async {
+    var token = await BASE.getDriveToken();
+    final response = await http.post(
+        Uri.http(
+          driveUrl,
+          URL.driveCreateFolder,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': "*",
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'X-Foo',
+          'Access-Control-Max-Age': '3600',
+          'Accept': 'text/plain',
+          'x-api-version': '1.0',
+          'Authorization': "Bearer $token",
+        },
+        body: json.encode({
+          "folderName": task.name,
+          "contactId": task.contactId,
+          "recorderContactPersonAccountId": task.recorderContactPersonAccountId,
+          "moduleId": 2898,
+          "primaryId": task.primaryId
+        }));
+    return jsonDecode(response.body)["data"];
+  }
+
+  static Future<FileResult> getDriveFilebyId(String id, int primaryId) async {
+    var token = await BASE.getDriveToken();
+    final response = await http.post(
+        Uri.http(
+          driveUrl,
+          URL.driveGetFile,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': "*",
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'X-Foo',
+          'Access-Control-Max-Age': '3600',
+          'Accept': 'text/plain',
+          'x-api-version': '1.0',
+          'Authorization': "Bearer $token",
+        },
+        body: json.encode(
+            {"parentId": id, "moduleId": 2898, "primaryId": primaryId}));
+    return FileResult.fromJson(jsonDecode(response.body));
   }
 
   static Future<List<ModuleTasks>> workSteps() async {
@@ -90,7 +234,8 @@ class API {
         body: json.encode({
           "Entity": {
             "TaskProgress": task.taskProgress,
-            "Description": task.description
+            "Description": task.description,
+            "RitmaDriveFolderId": task.ritmaDriveFolderId
           },
           "Id": task.id,
           "userId": user.data!.id!
@@ -183,7 +328,11 @@ class API {
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': user!.data!.token!
         },
-        body: json.encode({"Id": task.id, "userId": user.data!.id!,"Extend":{"Description":task.description}}));
+        body: json.encode({
+          "Id": task.id,
+          "userId": user.data!.id!,
+          "Extend": {"Description": task.description}
+        }));
     var data =
         json.decode(const Utf8Decoder().convert(response.bodyBytes))["data"];
     return data;

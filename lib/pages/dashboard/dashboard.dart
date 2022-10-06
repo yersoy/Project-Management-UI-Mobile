@@ -37,7 +37,6 @@ class _DashboardState extends State<Dashboard> {
     refreshController.refreshCompleted();
   }
 
-
   late Future<List<ModuleTasks>> data;
   @override
   void initState() {
@@ -179,7 +178,6 @@ class _DashboardState extends State<Dashboard> {
         enablePullDown: true,
         controller: refreshController,
         onRefresh: _onRefresh,
-
         child: ListView(
           padding: const EdgeInsets.all(14).copyWith(top: 0),
           shrinkWrap: true,
@@ -188,7 +186,7 @@ class _DashboardState extends State<Dashboard> {
               future: data, // a previously-obtained Future<String> or null
               builder: (BuildContext context, AsyncSnapshot<List<ModuleTasks>> snapshot) {
                 List<Widget> children;
-                if (snapshot.connectionState==ConnectionState.done&&snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                   children = <Widget>[for (var item in snapshot.data!) taskWidget(item)];
                 } else if (snapshot.hasError) {
                   children = <Widget>[

@@ -17,8 +17,11 @@ class BASE {
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
     final prefs = await SharedPreferences.getInstance();
+
     AuthModel user = await API.login(userName, password);
     if (user.success == true) {
+      String driveToken = await API.getDriveToken();
+      prefs.setString("driveToken", driveToken);
       prefs.setString("user", json.encode(user));
       Navigator.pushNamedAndRemoveUntil(context, Routes.DASHBOARD, (route) => false);
     } else {
@@ -31,15 +34,24 @@ class BASE {
     final prefs = await SharedPreferences.getInstance();
     var data = prefs.getString("user");
     AuthModel? user;
-    try {
-      user = AuthModel.fromJson(json.decode(data!));
-    } catch (ex) {
-      return null;
+    if (data != null) {
+      try {
+        user = AuthModel.fromJson(json.decode(data));
+      } catch (ex) {
+        return null;
+      }
+      if (user.success == true) {
+        return user;
+      } else {
+        return null;
+      }
     }
-    if (user.success == true) {
-      return user;
-    } else {
-      return null;
-    }
+    return null;
+  }
+
+  static Future<String?> getDriveToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    var data = prefs.getString("driveToken");
+    return data;
   }
 }
