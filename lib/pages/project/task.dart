@@ -5,6 +5,7 @@ import 'package:cilekhavuz/api/base.dart';
 import 'package:cilekhavuz/models/AuthModel.dart';
 import 'package:cilekhavuz/models/ModuleTasks.dart';
 import 'package:cilekhavuz/models/Person.dart';
+import 'package:cilekhavuz/models/WorkStepResult.dart';
 import 'package:cilekhavuz/models/tasktatus.dart';
 import 'package:cilekhavuz/pages/shared/boxtile.dart';
 import 'package:cilekhavuz/utils/constants.dart';
@@ -89,6 +90,13 @@ class _TaskState extends State<Task> {
     });
   }
 
+  Future uploadVideo(XFile video) async {
+    await API.uploadDriveFileImage(widget.task, video, context);
+    setState(() {
+      videos.add(video);
+    });
+  }
+
   Future uploadFile(FilePickerResult file) async {
     await API.uploadDriveFile(widget.task, file, context);
     setState(() {
@@ -115,18 +123,17 @@ class _TaskState extends State<Task> {
       barrierDismissible: false,
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
-    bool check = await API.workStepEdit(task);
-    if (check) {
+    WorkStepResult data = await API.workStepEdit(task);
+    if (data.data!) {
       Navigator.pop(context);
-      Navigator.pop(context);
-      Navigator.of(context).pushReplacementNamed(Routes.DASHBOARD);
       Utils.showDefaultSnackbar(context, "Görev Başarıyla Güncellendi!",
           const Icon(Icons.check, color: Colors.green));
-      return check;
+      return data.data!;
     } else {
+         Navigator.pop(context);
       Utils.showDefaultSnackbar(
           context,
-          "Görev Güncellenemedi",
+          data.message!,
           const Icon(
             Icons.check,
             color: Colors.green,
@@ -140,11 +147,10 @@ class _TaskState extends State<Task> {
       barrierDismissible: false,
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
-    bool check = await API.workStepStart(task);
-    if (check) {
+    WorkStepResult data = await API.workStepStart(task);
+    if (data.data!) {
       Navigator.pop(context);
       Navigator.pop(context);
-      Navigator.of(context).pushReplacementNamed(Routes.DASHBOARD);
       Utils.showDefaultSnackbar(context, "Görev Başarıyla Başlatıldı!",
           const Icon(Icons.check, color: Colors.green));
     } else {
@@ -152,7 +158,7 @@ class _TaskState extends State<Task> {
 
       Utils.showDefaultSnackbar(
           context,
-          "Görev Başlatılamadı",
+          data.message!,
           const Icon(
             Icons.check,
             color: Colors.green,
@@ -167,11 +173,10 @@ class _TaskState extends State<Task> {
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
-    bool check = await API.workStepComplete(task);
-    if (check) {
+    WorkStepResult data = await API.workStepComplete(task);
+    if (data.data!) {
       Navigator.pop(context);
       Navigator.pop(context);
-      Navigator.of(context).pushReplacementNamed(Routes.DASHBOARD);
       Utils.showDefaultSnackbar(context, "Görev Başarıyla Tamamlandı!",
           const Icon(Icons.check, color: Colors.green));
     } else {
@@ -179,10 +184,10 @@ class _TaskState extends State<Task> {
 
       Utils.showDefaultSnackbar(
           context,
-          "Görev Tamamlanamadı",
+          data.message!,
           const Icon(
             Icons.check,
-            color: Colors.green,
+            color: Colors.red,
           ));
     }
   }
@@ -194,11 +199,10 @@ class _TaskState extends State<Task> {
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
-    bool check = await API.workStepApproveTask(task);
-    if (check) {
+    WorkStepResult data = await API.workStepApproveTask(task);
+    if (data.data!) {
       Navigator.pop(context);
       Navigator.pop(context);
-      Navigator.of(context).pushReplacementNamed(Routes.DASHBOARD);
       Utils.showDefaultSnackbar(context, "Görev Başarıyla Onaylandı!",
           const Icon(Icons.check, color: Colors.green));
     } else {
@@ -206,10 +210,10 @@ class _TaskState extends State<Task> {
 
       Utils.showDefaultSnackbar(
           context,
-          "Görev Onaylanamadı!",
+          data.message!,
           const Icon(
             Icons.check,
-            color: Colors.green,
+            color: Colors.red,
           ));
     }
   }
@@ -221,22 +225,20 @@ class _TaskState extends State<Task> {
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
     await API.workStepEdit(task);
-    bool check = await API.workStepSubmitForApprove(task);
-    if (check) {
+    WorkStepResult data = await API.workStepSubmitForApprove(task);
+    if (data.data!) {
       Navigator.pop(context);
       Navigator.pop(context);
-      Navigator.of(context).pushReplacementNamed(Routes.DASHBOARD);
       Utils.showDefaultSnackbar(context, "Görev onaya gönderildi!",
           const Icon(Icons.check, color: Colors.green));
     } else {
       Navigator.pop(context);
-
       Utils.showDefaultSnackbar(
           context,
-          "Görev Onaya Gönderilemedi!",
+          data.message!,
           const Icon(
             Icons.check,
-            color: Colors.green,
+            color: Colors.red,
           ));
     }
   }
@@ -248,11 +250,10 @@ class _TaskState extends State<Task> {
       builder: (context) => const Center(child: CircularProgressIndicator()),
     );
 
-    bool check = await API.workStepRejectTask(task);
-    if (check) {
+    WorkStepResult data = await API.workStepRejectTask(task);
+    if (data.data!) {
       Navigator.pop(context);
       Navigator.pop(context);
-      Navigator.of(context).pushReplacementNamed(Routes.DASHBOARD);
       Utils.showDefaultSnackbar(context, "Görev Reddedildi!",
           const Icon(LineIcons.times, color: Colors.red));
     } else {
@@ -260,7 +261,7 @@ class _TaskState extends State<Task> {
 
       Utils.showDefaultSnackbar(
           context,
-          "Görev Red Olmadı!",
+          data.message!,
           const Icon(
             LineIcons.times,
             color: Colors.red,
@@ -269,32 +270,37 @@ class _TaskState extends State<Task> {
   }
 
   bool valideForm() {
-    if (widget.task.isRequiredImage!) {
-      if (images.isEmpty) {
-        Utils.showDefaultSnackbar(context, "Lütfen Resim Ekleyin!", null);
-        return false;
-      }
-      return true;
-    } else if (widget.task.isRequiredVideo!) {
-      if (videos.isEmpty) {
-        Utils.showDefaultSnackbar(context, "Lütfen Video Ekleyin!", null);
-        return false;
-      }
-      return true;
-    } else if (widget.task.isRequiredFile!) {
-      if (files.isEmpty) {
-        Utils.showDefaultSnackbar(context, "Lütfen Dosya Ekleyin!", null);
-        return false;
-      }
-      return true;
-    }
+    bool check = true;
     if (_formKey.currentState!.validate()) {
-      return true;
+      check = true;
     } else {
       Utils.showDefaultSnackbar(
           context, "Lütfen Gerekli Alanları Doldurun!", null);
+           check = false;
+      return check;
     }
-    return false;
+    if (widget.task.isRequiredImage!) {
+      if (images.isEmpty) {
+        Utils.showDefaultSnackbar(context, "Lütfen Resim Ekleyin!", null);
+        check = false;
+        return check;
+      }
+    }
+    if (widget.task.isRequiredVideo!) {
+      if (videos.isEmpty) {
+        Utils.showDefaultSnackbar(context, "Lütfen Video Ekleyin!", null);
+        check = false;
+        return check;
+      }
+    }
+    if (widget.task.isRequiredFile!) {
+      if (files.isEmpty) {
+        Utils.showDefaultSnackbar(context, "Lütfen Dosya Ekleyin!", null);
+        check = false;
+        return check;
+      }
+    }
+    return check;
   }
 
   Widget getButton() {
@@ -730,7 +736,7 @@ class _TaskState extends State<Task> {
                             maxDuration: const Duration(seconds: 30));
 
                         if (video != null) {
-                          uploadImage(video);
+                          uploadVideo(video);
                         }
                       },
                       child: Wrap(

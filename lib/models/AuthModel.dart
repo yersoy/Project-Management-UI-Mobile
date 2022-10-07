@@ -184,11 +184,11 @@ class Extended {
   Delete? delete;
   SpecialAuthorizations? specialAuthorizations;
   String? $id;
-  Null? name;
-  Null? value;
-  Null? description;
-  Null? descriptionEn;
-  Null? parent;
+  String? name;
+  String? value;
+  String? description;
+  String? descriptionEn;
+  String? parent;
 
   Extended(
       {this.$id,
@@ -257,9 +257,9 @@ class Create {
   bool? create;
   bool? otherCreate;
   bool? blockCreate;
-  Null? personalIds;
-  Null? departmanIds;
-  Null? contactIds;
+  String? personalIds;
+  String? departmanIds;
+  String? contactIds;
 
   Create({this.id, this.create, this.otherCreate, this.blockCreate, this.personalIds, this.departmanIds, this.contactIds});
 
@@ -291,9 +291,9 @@ class Update {
   bool? update;
   bool? otherUpdate;
   bool? blockUpdate;
-  Null? personalIds;
-  Null? departmanIds;
-  Null? contactIds;
+  String? personalIds;
+  String? departmanIds;
+  String? contactIds;
 
   Update({this.id, this.update, this.otherUpdate, this.blockUpdate, this.personalIds, this.departmanIds, this.contactIds});
 
@@ -325,9 +325,9 @@ class Delete {
   bool? delete;
   bool? otherDelete;
   bool? blockDelete;
-  Null? personalIds;
-  Null? departmanIds;
-  Null? contactIds;
+  String? personalIds;
+  String? departmanIds;
+  String? contactIds;
 
   Delete({this.id, this.delete, this.otherDelete, this.blockDelete, this.personalIds, this.departmanIds, this.contactIds});
 

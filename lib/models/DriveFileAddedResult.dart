@@ -1,17 +1,12 @@
-class FileResult {
-  List<Data>? data;
+class FileAddedResult {
+  Data? data;
   bool? succeeded;
   String? errorMessage;
 
-  FileResult({this.data, this.succeeded, this.errorMessage});
+  FileAddedResult({this.data, this.succeeded, this.errorMessage});
 
-  FileResult.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
-      data = <Data>[];
-      json['data'].forEach((v) {
-        data!.add( Data.fromJson(v));
-      });
-    }
+  FileAddedResult.fromJson(Map<String, dynamic> json) {
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
     succeeded = json['succeeded'];
     errorMessage = json['errorMessage'];
   }
@@ -19,7 +14,7 @@ class FileResult {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.toJson();
     }
     data['succeeded'] = this.succeeded;
     data['errorMessage'] = this.errorMessage;

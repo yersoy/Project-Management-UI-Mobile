@@ -8,6 +8,7 @@ class URL {
   static String workstepApproveTask = "/api/ModuleTask/ApproveTask";
   static String workstepRejectTask = "/api/ModuleTask/RejectTask";
   static String workstepGet = "/api/ModuleTask/GetView";
+  static String workstepAddFiletoModules = "/api/ModuleTask/SaveTaskFile";
 
   static String driveGetToken = "/api/DriveAuthentication/GetApiAccessInformations/1";
   static String driveGetFile = "/api/files/GetFiles";

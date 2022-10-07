@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'package:cilekhavuz/api/base.dart';
 import 'package:cilekhavuz/api/urls.dart';
 import 'package:cilekhavuz/models/AuthModel.dart';
+import 'package:cilekhavuz/models/DriveFileAddedResult.dart';
 import 'package:cilekhavuz/models/FileResult.dart';
 import 'package:cilekhavuz/models/ModuleTasks.dart';
+import 'package:cilekhavuz/models/WorkStepResult.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +16,9 @@ import 'package:image_picker/image_picker.dart';
 
 class API {
   static String tenantName = "sisel";
-  static String url = "zy.ritmaflex.com";
+  static String url = "192.168.1.3:45455";
   static String driveUrl = "195.142.132.122:3003";
-
+  
   static int taskcount = 0;
   static Future<AuthModel> login(String username, String password) async {
     final response = await http.post(
@@ -70,12 +72,18 @@ class API {
     dio.options.headers["Accept"] = 'application/json';
 
     final response = await dio.post(URL.driveUploadFile, data: formData);
-    Navigator.pop(context);
-    return response.data["succeeded"];
+    var data = FileAddedResult.fromJson(response.data);
+    var check = await API.addTaskFileToModuleTasks(data, task);
+    if (check) {
+      Navigator.pop(context);
+      return true;
+    }
+    return false;
   }
 
-  static Future<bool> uploadDriveFileImage(ModuleTasks task, XFile file,context) async {
-     showDialog(
+  static Future<bool> uploadDriveFileImage(
+      ModuleTasks task, XFile file, context) async {
+    showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => const Center(child: CircularProgressIndicator()),
@@ -98,8 +106,13 @@ class API {
     dio.options.headers["Accept"] = 'application/json';
 
     final response = await dio.post(URL.driveUploadFile, data: formData);
-    Navigator.pop(context);
-    return response.data["succeeded"];
+    var data = FileAddedResult.fromJson(response.data);
+    var check = await API.addTaskFileToModuleTasks(data, task);
+    if (check) {
+      Navigator.pop(context);
+      return true;
+    }
+    return false;
   }
 
   static Future<bool> deleteDriveFile(String id) async {
@@ -220,7 +233,7 @@ class API {
     return ModuleTasks.fromJson(data);
   }
 
-  static Future<bool> workStepEdit(ModuleTasks task) async {
+  static Future<WorkStepResult> workStepEdit(ModuleTasks task) async {
     var user = await BASE.getUser();
     final response = await http.post(
         Uri.http(
@@ -240,12 +253,11 @@ class API {
           "Id": task.id,
           "userId": user.data!.id!
         }));
-    var data =
-        json.decode(const Utf8Decoder().convert(response.bodyBytes))["data"];
-    return data;
+    var data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
+    return WorkStepResult.fromJson(data);
   }
 
-  static Future<bool> workStepStart(ModuleTasks task) async {
+  static Future<WorkStepResult> workStepStart(ModuleTasks task) async {
     var user = await BASE.getUser();
     final response = await http.post(
         Uri.http(
@@ -257,12 +269,11 @@ class API {
           'Authorization': user!.data!.token!
         },
         body: json.encode({"Id": task.id}));
-    var data =
-        json.decode(const Utf8Decoder().convert(response.bodyBytes))["data"];
-    return data;
+    var data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
+    return WorkStepResult.fromJson(data);
   }
 
-  static Future<bool> workStepComplete(ModuleTasks task) async {
+  static Future<WorkStepResult> workStepComplete(ModuleTasks task) async {
     var user = await BASE.getUser();
     final response = await http.post(
         Uri.http(
@@ -276,12 +287,39 @@ class API {
         body: json.encode({
           "Id": task.id,
         }));
-    var data =
-        json.decode(const Utf8Decoder().convert(response.bodyBytes))["data"];
-    return data;
+    var data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
+    return WorkStepResult.fromJson(data);
   }
 
-  static Future<bool> workStepSubmitForApprove(ModuleTasks task) async {
+  static Future<bool> addTaskFileToModuleTasks(
+      FileAddedResult file, ModuleTasks task) async {
+    var user = await BASE.getUser();
+    final response = await http.post(
+        Uri.http(
+          url,
+          URL.workstepAddFiletoModules,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
+        body: json.encode({
+          "Entity": {
+            "FolderId": task.ritmaDriveFolderId,
+            "DriveId": file.data!.id,
+            "FileTypeId": file.data!.fileTypeId,
+            "Url": file.data!.url,
+          },
+          "Id": task.primaryId,
+          "OwnerId": user.data!.contactId,
+          "UserId": user.data!.id,
+        }));
+    var data = json.decode(response.body);
+    return data["data"];
+  }
+
+  static Future<WorkStepResult> workStepSubmitForApprove(
+      ModuleTasks task) async {
     var user = await BASE.getUser();
     final response = await http.post(
         Uri.http(
@@ -293,12 +331,11 @@ class API {
           'Authorization': user!.data!.token!
         },
         body: json.encode({"Id": task.id, "UserId": user.data!.id!}));
-    var data =
-        json.decode(const Utf8Decoder().convert(response.bodyBytes))["data"];
-    return data;
+    var data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
+    return WorkStepResult.fromJson(data);
   }
 
-  static Future<bool> workStepApproveTask(ModuleTasks task) async {
+  static Future<WorkStepResult> workStepApproveTask(ModuleTasks task) async {
     var user = await BASE.getUser();
     final response = await http.post(
         Uri.http(
@@ -313,11 +350,11 @@ class API {
           "Id": task.id,
         }));
     var data =
-        json.decode(const Utf8Decoder().convert(response.bodyBytes))["data"];
-    return data;
+        json.decode(const Utf8Decoder().convert(response.bodyBytes));
+    return WorkStepResult.fromJson(data);
   }
 
-  static Future<bool> workStepRejectTask(ModuleTasks task) async {
+  static Future<WorkStepResult> workStepRejectTask(ModuleTasks task) async {
     var user = await BASE.getUser();
     final response = await http.post(
         Uri.http(
@@ -334,7 +371,7 @@ class API {
           "Extend": {"Description": task.description}
         }));
     var data =
-        json.decode(const Utf8Decoder().convert(response.bodyBytes))["data"];
-    return data;
+        json.decode(const Utf8Decoder().convert(response.bodyBytes));
+    return WorkStepResult.fromJson(data);
   }
 }
