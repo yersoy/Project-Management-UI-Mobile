@@ -9,7 +9,7 @@ class FileResult {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add( Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
     succeeded = json['succeeded'];

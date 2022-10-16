@@ -8,15 +8,7 @@ class WorkStepResult {
   int? validationEnum;
   dynamic paginationInfo;
 
-  WorkStepResult(
-      {this.id,
-      this.data,
-      this.status,
-      this.message,
-      this.success,
-      this.failure,
-      this.validationEnum,
-      this.paginationInfo});
+  WorkStepResult({this.id, this.data, this.status, this.message, this.success, this.failure, this.validationEnum, this.paginationInfo});
 
   WorkStepResult.fromJson(Map<String, dynamic> json) {
     id = json['$id'];

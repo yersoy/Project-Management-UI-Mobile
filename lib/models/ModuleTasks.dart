@@ -216,6 +216,7 @@ class EventStatusValue {
   bool? isActive;
   bool? isExpired;
   bool? isDefault;
+  bool? isStop;
   bool? isWaitingApproval;
   String? personelIds;
   String? departmentIds;
@@ -243,6 +244,7 @@ class EventStatusValue {
       this.description,
       this.descriptionEn,
       this.isDefault,
+      this.isStop,
       this.parent});
 
   EventStatusValue.fromJson(Map<String, dynamic> json) {
@@ -254,6 +256,7 @@ class EventStatusValue {
     isActive = json['IsActive'];
     isExpired = json['IsExpired'];
     isDefault = json['IsDefault'];
+    isStop = json['IsStop'];
     isWaitingApproval = json['IsWaitingApproval'];
     personelIds = json['PersonelIds'];
     departmentIds = json['DepartmentIds'];
@@ -274,6 +277,7 @@ class EventStatusValue {
     data['IsEmail'] = isEmail;
     data['IsActive'] = isActive;
     data['IsDefault'] = isDefault;
+    data['IsStop'] = isStop;
     data['IsExpired'] = isExpired;
     data['IsWaitingApproval'] = isWaitingApproval;
     data['DepartmentIds'] = departmentIds;
