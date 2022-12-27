@@ -46,7 +46,8 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget taskWidget(ModuleTasks item) {
-    Color? statusColor = Utils.hexOrRGBToColor(item.eventStatusValue!.colorCode!);
+
+    Color? statusColor = item.eventStatusValue!=null?Utils.hexOrRGBToColor(item.eventStatusValue!.colorCode!):Colors.grey;
 
     return Container(
       margin: const EdgeInsets.all(12).copyWith(top: 0),

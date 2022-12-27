@@ -33,22 +33,18 @@ class _ContactPersonState extends State<ContactPerson> {
     int userid = user!.data!.id!;
     personIds.clear();
     setState(() {
-      widget.task.personIds!
-          .removeWhere((x) => x.id == selectedPersonel!.id || x.id == null);
+      widget.task.personIds!.removeWhere((x) => x.id == selectedPersonel!.id || x.id == null);
     });
 
     for (var item in widget.task.personIds!) {
       personIds.add(item.id!);
     }
     personIds = personIds.toSet().toList();
-    WorkStepResult data =
-        await API.workStepRedirect(widget.task, personIds.toString());
+    WorkStepResult data = await API.workStepRedirect(widget.task, personIds.toString());
     if (data.data!) {
       Navigator.pop(context);
       Utils.showDefaultSnackbar(
-          context,
-          "Görev ${selectedPersonel!.name!} isimli kişi görevden alındı ",
-          const Icon(LineIcons.times, color: Colors.red));
+          context, "Görev ${selectedPersonel!.name!} isimli kişi görevden alındı ", const Icon(LineIcons.times, color: Colors.red));
     } else {
       Navigator.pop(context);
       Utils.showDefaultSnackbar(
@@ -78,14 +74,11 @@ class _ContactPersonState extends State<ContactPerson> {
       personIds.add(item.id!);
     }
     personIds = personIds.toSet().toList();
-    WorkStepResult data =
-        await API.workStepRedirect(widget.task, personIds.toString());
+    WorkStepResult data = await API.workStepRedirect(widget.task, personIds.toString());
     if (data.data!) {
       Navigator.pop(context);
       Utils.showDefaultSnackbar(
-          context,
-          "Görev ${selectedPersonel!.name!} isimli kişiye yönlendirildi ",
-          const Icon(LineIcons.share, color: Colors.green));
+          context, "Görev ${selectedPersonel!.name!} isimli kişiye yönlendirildi ", const Icon(LineIcons.share, color: Colors.green));
     } else {
       Navigator.pop(context);
       Utils.showDefaultSnackbar(
@@ -97,12 +90,14 @@ class _ContactPersonState extends State<ContactPerson> {
           ));
     }
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    listFuture= API.getPersonnelByContactId();
+    listFuture = API.getPersonnelByContactId();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,19 +117,15 @@ class _ContactPersonState extends State<ContactPerson> {
       ),
       body: FutureBuilder<List<ContactPersonModel>>(
         future: listFuture,
-        builder: (BuildContext context,
-            AsyncSnapshot<List<ContactPersonModel>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
+        builder: (BuildContext context, AsyncSnapshot<List<ContactPersonModel>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
             return ListView(
               shrinkWrap: true,
               padding: const EdgeInsets.all(14),
               children: [
                 for (var item in snapshot.data!)
                   BoxTile(
-                      onTap: widget.task.personIds!
-                              .where((x) => x.id == item.id)
-                              .isEmpty
+                      onTap: widget.task.personIds!.where((x) => x.id == item.id).isEmpty
                           ? () {
                               selectedPersonel = item;
                               redirectTask(context);
@@ -146,9 +137,7 @@ class _ContactPersonState extends State<ContactPerson> {
                       margin: const EdgeInsets.only(bottom: 8),
                       leading: CircleAvatar(
                         backgroundColor: Colors.blue,
-                        backgroundImage: item.imagePath != null
-                            ? NetworkImage(item.imagePath!)
-                            : null,
+                        backgroundImage: item.imagePath != null ? NetworkImage(item.imagePath!) : null,
                         child: item.imagePath == null
                             ? Text(
                                 item.name![0],
@@ -158,9 +147,7 @@ class _ContactPersonState extends State<ContactPerson> {
                       ),
                       title: Text(item.name!),
                       subtitle: Text(item.title!),
-                      trailing: widget.task.personIds!
-                              .where((x) => x.id == item.id)
-                              .isEmpty
+                      trailing: widget.task.personIds!.where((x) => x.id == item.id).isEmpty
                           ? const Icon(LineIcons.angleRight)
                           : const Icon(
                               LineIcons.check,

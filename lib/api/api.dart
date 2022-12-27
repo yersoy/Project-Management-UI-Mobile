@@ -1,6 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 import 'dart:convert';
-
+import 'package:cilekhavuz/models/materialmodel.dart';
+import 'package:flutter/services.dart';
 import 'package:cilekhavuz/api/base.dart';
 import 'package:cilekhavuz/api/urls.dart';
 import 'package:cilekhavuz/models/AuthModel.dart';
@@ -16,10 +17,9 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 class API {
-  static String tenantName = "sisel";
-  static String url = "zy.ritmaflex.com";
+  // static String url = "192.168.1.8:45455";
+  static String url = "cilekhavuz.ritmaflex.com";
   static String driveUrl = "195.142.132.122:3003";
-
   static int taskcount = 0;
   static Future<AuthModel> login(String username, String password) async {
     final response = await http.post(
@@ -68,7 +68,8 @@ class API {
     return jsonDecode(response.body)["data"]["accessToken"];
   }
 
-  static Future<bool> uploadDriveFile(ModuleTasks task, FilePickerResult file, context) async {
+  static Future<bool> uploadDriveFile(
+      ModuleTasks task, FilePickerResult file, context) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -82,7 +83,8 @@ class API {
       "ModuleId": 2898,
       "PrimaryId": task.primaryId,
       "FileKeyType": 1,
-      "file": await MultipartFile.fromFile(file.files.first.path!, filename: file.files.first.name),
+      "file": await MultipartFile.fromFile(file.files.first.path!,
+          filename: file.files.first.name),
     });
     Dio dio = Dio();
     dio.options.baseUrl = "http://$driveUrl";
@@ -101,7 +103,8 @@ class API {
     return false;
   }
 
-  static Future<bool> uploadDriveFileImage(ModuleTasks task, XFile file, context) async {
+  static Future<bool> uploadDriveFileImage(
+      ModuleTasks task, XFile file, context) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -195,7 +198,8 @@ class API {
           'x-api-version': '1.0',
           'Authorization': "Bearer $token",
         },
-        body: json.encode({"parentId": id, "moduleId": 2898, "primaryId": primaryId}));
+        body: json.encode(
+            {"parentId": id, "moduleId": 2898, "primaryId": primaryId}));
     return FileResult.fromJson(jsonDecode(response.body));
   }
 
@@ -206,14 +210,19 @@ class API {
           url,
           URL.workstepsUrl,
         ),
-        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': user!.data!.token!},
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
         body: json.encode({
           "Entity": {
             "tableId": 2898,
           },
           "userId": user.data!.id!
         }));
-    var data = json.decode(const Utf8Decoder().convert(response.bodyBytes))["data"]["\$values"];
+    var data =
+        json.decode(const Utf8Decoder().convert(response.bodyBytes))["data"]
+            ["\$values"];
     taskcount = data.length;
     return List<ModuleTasks>.from(
       data.map(
@@ -229,7 +238,10 @@ class API {
           url,
           URL.workstepGet,
         ),
-        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': user!.data!.token!},
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
         body: json.encode({
           "Entity": {
             "tableId": 2898,
@@ -237,7 +249,8 @@ class API {
           "userId": user.data!.id!,
           "Id": id
         }));
-    var data = json.decode(const Utf8Decoder().convert(response.bodyBytes))["data"];
+    var data =
+        json.decode(const Utf8Decoder().convert(response.bodyBytes))["data"];
     taskcount = data.length;
     return ModuleTasks.fromJson(data);
   }
@@ -249,14 +262,44 @@ class API {
           url,
           URL.workstepEdit,
         ),
-        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': user!.data!.token!},
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
         body: json.encode({
-          "Entity": {"TaskProgress": task.taskProgress, "Description": task.description, "RitmaDriveFolderId": task.ritmaDriveFolderId},
+          "Entity": {
+            "TaskProgress": task.taskProgress,
+            "Description": task.description,
+            "RitmaDriveFolderId": task.ritmaDriveFolderId
+          },
           "Id": task.id,
           "userId": user.data!.id!
         }));
     var data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
     return WorkStepResult.fromJson(data);
+  }
+
+  static Future<List<MaterialModel>> workStepGetMaterials(
+      ModuleTasks task) async {
+    var user = await BASE.getUser();
+    final response = await http.post(
+        Uri.http(
+          url,
+          URL.workstepGetMaterials,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
+        body: json.encode({
+          "Entity": {"ModuleTaskId": task.id},
+        }));
+    var data = List<MaterialModel>.from(
+      json.decode(response.body)["data"]["\$values"].map(
+            (model) => MaterialModel.fromJson(model),
+          ),
+    );
+    return data;
   }
 
   static Future<WorkStepResult> workStepStart(ModuleTasks task) async {
@@ -266,7 +309,10 @@ class API {
           url,
           URL.workstepStartTask,
         ),
-        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': user!.data!.token!},
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
         body: json.encode({"Id": task.id}));
     var data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
     return WorkStepResult.fromJson(data);
@@ -279,7 +325,10 @@ class API {
           url,
           URL.workstepStopTask,
         ),
-        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': user!.data!.token!},
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
         body: json.encode({
           "Id": task.id,
           "OwnerId": task.contactId,
@@ -291,14 +340,18 @@ class API {
     return WorkStepResult.fromJson(data);
   }
 
-  static Future<WorkStepResult> workStepRedirect(ModuleTasks task, String personIds) async {
+  static Future<WorkStepResult> workStepRedirect(
+      ModuleTasks task, String personIds) async {
     var user = await BASE.getUser();
     final response = await http.post(
         Uri.http(
           url,
           URL.workstepRedirectTaskPersonels,
         ),
-        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': user!.data!.token!},
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
         body: json.encode({
           "Id": task.id,
           "Entity": {"PersonIds": personIds}
@@ -314,7 +367,10 @@ class API {
           url,
           URL.workstepCompleteTask,
         ),
-        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': user!.data!.token!},
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
         body: json.encode({
           "Id": task.id,
         }));
@@ -322,14 +378,18 @@ class API {
     return WorkStepResult.fromJson(data);
   }
 
-  static Future<bool> addTaskFileToModuleTasks(FileAddedResult file, ModuleTasks task) async {
+  static Future<bool> addTaskFileToModuleTasks(
+      FileAddedResult file, ModuleTasks task) async {
     var user = await BASE.getUser();
     final response = await http.post(
         Uri.http(
           url,
           URL.workstepAddFiletoModules,
         ),
-        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': user!.data!.token!},
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
         body: json.encode({
           "Entity": {
             "FolderId": task.ritmaDriveFolderId,
@@ -345,14 +405,18 @@ class API {
     return data["data"];
   }
 
-  static Future<WorkStepResult> workStepSubmitForApprove(ModuleTasks task) async {
+  static Future<WorkStepResult> workStepSubmitForApprove(
+      ModuleTasks task) async {
     var user = await BASE.getUser();
     final response = await http.post(
         Uri.http(
           url,
           URL.workstepSubmitTaskForApproval,
         ),
-        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': user!.data!.token!},
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
         body: json.encode({"Id": task.id, "UserId": user.data!.id!}));
     var data = json.decode(const Utf8Decoder().convert(response.bodyBytes));
     return WorkStepResult.fromJson(data);
@@ -365,7 +429,10 @@ class API {
           url,
           URL.workstepApproveTask,
         ),
-        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': user!.data!.token!},
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
         body: json.encode({
           "Id": task.id,
         }));
@@ -380,7 +447,10 @@ class API {
           url,
           URL.workstepRejectTask,
         ),
-        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': user!.data!.token!},
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': user!.data!.token!
+        },
         body: json.encode({
           "Id": task.id,
           "userId": user.data!.id!,

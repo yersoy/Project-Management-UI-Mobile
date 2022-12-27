@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:cilekhavuz/api/api.dart';
-import 'package:cilekhavuz/api/base.dart';
+
 import 'package:cilekhavuz/models/AuthModel.dart';
 import 'package:cilekhavuz/models/ModuleTasks.dart';
 import 'package:cilekhavuz/models/Person.dart';
 import 'package:cilekhavuz/models/WorkStepResult.dart';
+import 'package:cilekhavuz/models/materialmodel.dart';
 import 'package:cilekhavuz/models/tasktatus.dart';
 import 'package:cilekhavuz/pages/modals/person/contactpersonview.dart';
 import 'package:cilekhavuz/pages/shared/boxtile.dart';
@@ -25,7 +24,8 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 class Task extends StatefulWidget {
   ModuleTasks task;
   final bool isAuthorized;
-  Task({Key? key, required this.task, required this.isAuthorized}) : super(key: key);
+  Task({Key? key, required this.task, required this.isAuthorized})
+      : super(key: key);
 
   @override
   State<Task> createState() => _TaskState();
@@ -127,7 +127,8 @@ class _TaskState extends State<Task> {
     WorkStepResult data = await API.workStepEdit(task);
     if (data.data!) {
       Navigator.pop(context);
-      Utils.showDefaultSnackbar(context, "Görev Başarıyla Güncellendi!", const Icon(Icons.check, color: Colors.green));
+      Utils.showDefaultSnackbar(context, "Görev Başarıyla Güncellendi!",
+          const Icon(Icons.check, color: Colors.green));
       return data.data!;
     } else {
       Navigator.pop(context);
@@ -151,7 +152,8 @@ class _TaskState extends State<Task> {
     if (data.data!) {
       Navigator.pop(context);
       Navigator.pop(context);
-      Utils.showDefaultSnackbar(context, "Görev Başarıyla Başlatıldı!", const Icon(Icons.check, color: Colors.green));
+      Utils.showDefaultSnackbar(context, "Görev Başarıyla Başlatıldı!",
+          const Icon(Icons.check, color: Colors.green));
     } else {
       Navigator.pop(context);
 
@@ -176,7 +178,8 @@ class _TaskState extends State<Task> {
     if (data.data!) {
       Navigator.pop(context);
       Navigator.pop(context);
-      Utils.showDefaultSnackbar(context, "Görev Başarıyla Tamamlandı!", const Icon(Icons.check, color: Colors.green));
+      Utils.showDefaultSnackbar(context, "Görev Başarıyla Tamamlandı!",
+          const Icon(Icons.check, color: Colors.green));
     } else {
       Navigator.pop(context);
 
@@ -201,7 +204,8 @@ class _TaskState extends State<Task> {
     if (data.data!) {
       Navigator.pop(context);
       Navigator.pop(context);
-      Utils.showDefaultSnackbar(context, "Görev Durduldu!", const Icon(Icons.check, color: Colors.blue));
+      Utils.showDefaultSnackbar(context, "Görev Durduldu!",
+          const Icon(Icons.check, color: Colors.blue));
     } else {
       Navigator.pop(context);
 
@@ -226,7 +230,8 @@ class _TaskState extends State<Task> {
     if (data.data!) {
       Navigator.pop(context);
       Navigator.pop(context);
-      Utils.showDefaultSnackbar(context, "Görev Başarıyla Onaylandı!", const Icon(Icons.check, color: Colors.green));
+      Utils.showDefaultSnackbar(context, "Görev Başarıyla Onaylandı!",
+          const Icon(Icons.check, color: Colors.green));
     } else {
       Navigator.pop(context);
 
@@ -251,7 +256,8 @@ class _TaskState extends State<Task> {
     if (data.data!) {
       Navigator.pop(context);
       Navigator.pop(context);
-      Utils.showDefaultSnackbar(context, "Görev onaya gönderildi!", const Icon(Icons.check, color: Colors.green));
+      Utils.showDefaultSnackbar(context, "Görev onaya gönderildi!",
+          const Icon(Icons.check, color: Colors.green));
     } else {
       Navigator.pop(context);
       Utils.showDefaultSnackbar(
@@ -275,7 +281,8 @@ class _TaskState extends State<Task> {
     if (data.data!) {
       Navigator.pop(context);
       Navigator.pop(context);
-      Utils.showDefaultSnackbar(context, "Görev Reddedildi!", const Icon(LineIcons.times, color: Colors.red));
+      Utils.showDefaultSnackbar(context, "Görev Reddedildi!",
+          const Icon(LineIcons.times, color: Colors.red));
     } else {
       Navigator.pop(context);
 
@@ -294,7 +301,8 @@ class _TaskState extends State<Task> {
     if (_formKey.currentState!.validate()) {
       check = true;
     } else {
-      Utils.showDefaultSnackbar(context, "Lütfen Gerekli Alanları Doldurun!", null);
+      Utils.showDefaultSnackbar(
+          context, "Lütfen Gerekli Alanları Doldurun!", null);
       check = false;
       return check;
     }
@@ -323,17 +331,23 @@ class _TaskState extends State<Task> {
   }
 
   Widget getButton() {
-    if ((widget.task.eventStatusValue!.isDefault != null && widget.task.eventStatusValue!.isDefault!) ||
-        (widget.task.eventStatusValue!.isStop != null && widget.task.eventStatusValue!.isStop!)) {
+    if ((widget.task.eventStatusValue!.isDefault != null &&
+            widget.task.eventStatusValue!.isDefault!) ||
+        (widget.task.eventStatusValue!.isStop != null &&
+            widget.task.eventStatusValue!.isStop!)) {
       return ElevatedButton(
           onPressed: () {
             startTask(widget.task, context);
           },
           child: const Text("BAŞLAT"));
-    } else if (widget.task.eventStatusValue!.isActive != null && widget.task.eventStatusValue!.isActive!) {
-      if (widget.task.isRelatedContactApprovalRequired! || widget.task.isAuditorApprovalRequired!) {
+    } else if (widget.task.eventStatusValue!.isActive != null &&
+        widget.task.eventStatusValue!.isActive!) {
+      if (widget.task.isRelatedContactApprovalRequired! ||
+          widget.task.isAuditorApprovalRequired!) {
         return ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Utils.hexOrRGBToColor(widget.task.eventStatusValue!.colorCode!)),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Utils.hexOrRGBToColor(
+                    widget.task.eventStatusValue!.colorCode!)),
             onPressed: () {
               var check = valideForm();
               if (check) {
@@ -341,9 +355,12 @@ class _TaskState extends State<Task> {
               }
             },
             child: const Text("Onay İste"));
-      } else if (widget.task.eventStatusValue!.isExpired != null && widget.task.eventStatusValue!.isExpired!) {
+      } else if (widget.task.eventStatusValue!.isExpired != null &&
+          widget.task.eventStatusValue!.isExpired!) {
         return ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Utils.hexOrRGBToColor(widget.task.eventStatusValue!.colorCode!)),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Utils.hexOrRGBToColor(
+                    widget.task.eventStatusValue!.colorCode!)),
             onPressed: () {
               startTask(widget.task, context);
             },
@@ -361,7 +378,9 @@ class _TaskState extends State<Task> {
               },
               child: const Text("Değişiklikleri Kaydet")),
           ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Utils.hexOrRGBToColor(widget.task.eventStatusValue!.colorCode!)),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Utils.hexOrRGBToColor(
+                      widget.task.eventStatusValue!.colorCode!)),
               onPressed: () {
                 var check = valideForm();
                 if (check) {
@@ -374,18 +393,23 @@ class _TaskState extends State<Task> {
               onPressed: () {
                 var check = valideForm();
                 if (check) {
-                  DatePicker.showDatePicker(context, showTitleActions: true, minTime: DateTime.now(), onChanged: (date) {
+                  DatePicker.showDatePicker(context,
+                      showTitleActions: true,
+                      minTime: DateTime.now(), onChanged: (date) {
                     widget.task.startDate = date.toIso8601String();
                   }, onConfirm: (date) {
                     widget.task.startDate = date.toIso8601String();
                     stopTask(widget.task, context);
-                  }, currentTime: DateTime.tryParse(widget.task.startDate!), locale: LocaleType.tr);
+                  },
+                      currentTime: DateTime.tryParse(widget.task.startDate!),
+                      locale: LocaleType.tr);
                 }
               },
               child: const Text("DURDUR"))
         ],
       );
-    } else if (widget.task.eventStatusValue!.isWaitingApproval != null && widget.task.eventStatusValue!.isWaitingApproval!) {
+    } else if (widget.task.eventStatusValue!.isWaitingApproval != null &&
+        widget.task.eventStatusValue!.isWaitingApproval!) {
       if (widget.isAuthorized) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -406,7 +430,9 @@ class _TaskState extends State<Task> {
         );
       }
       return ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Utils.hexOrRGBToColor(widget.task.eventStatusValue!.colorCode!)),
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Utils.hexOrRGBToColor(
+                  widget.task.eventStatusValue!.colorCode!)),
           onPressed: () {},
           child: const Text("Onay Bekleniyor"));
     }
@@ -416,6 +442,7 @@ class _TaskState extends State<Task> {
   @override
   void initState() {
     super.initState();
+
     if (widget.task.startDate != null) {
       startDate = DateTime.parse(widget.task.startDate!);
       startDateController.text = DateFormat("d.MM.yyyy").format(startDate!);
@@ -434,7 +461,10 @@ class _TaskState extends State<Task> {
 
     dropdownValue = taskStatusList.first;
     if (widget.task.ritmaDriveFolderId != null) {
-      API.getDriveFilebyId(widget.task.ritmaDriveFolderId!, widget.task.primaryId!).then((value) {
+      API
+          .getDriveFilebyId(
+              widget.task.ritmaDriveFolderId!, widget.task.primaryId!)
+          .then((value) {
         for (var item in value.data!) {
           switch (item.fileTypeId) {
             case FileTypeIds.IMAGE:
@@ -451,7 +481,13 @@ class _TaskState extends State<Task> {
               break;
 
             default:
-              List<PlatformFile> loaddedfiles = [PlatformFile(path: item.url, name: item.name!, size: item.fileSizeInBytes!, identifier: item.id)];
+              List<PlatformFile> loaddedfiles = [
+                PlatformFile(
+                    path: item.url,
+                    name: item.name!,
+                    size: item.fileSizeInBytes!,
+                    identifier: item.id)
+              ];
               FilePickerResult file = FilePickerResult(loaddedfiles);
               setState(() {
                 files.add(file);
@@ -496,8 +532,10 @@ class _TaskState extends State<Task> {
                   width: 8,
                   height: 8,
                   decoration: BoxDecoration(
-                      color: Utils.hexOrRGBToColor(widget.task.eventStatusValue!.colorCode!),
-                      borderRadius: const BorderRadius.all(Radius.circular(20))),
+                      color: Utils.hexOrRGBToColor(
+                          widget.task.eventStatusValue!.colorCode!),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(20))),
                 ),
                 const SizedBox(
                   width: 4,
@@ -549,9 +587,13 @@ class _TaskState extends State<Task> {
               ],
             ),
             parse(widget.task.description!).documentElement!.text.isNotEmpty
-                ? BoxTile(margin: const EdgeInsets.only(bottom: 8), title: Text(parse(widget.task.description!).documentElement!.text))
+                ? BoxTile(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    title: Text(
+                        parse(widget.task.description!).documentElement!.text))
                 : const SizedBox(),
-            widget.task.eventStatusValue!.isDefault == false || widget.task.eventStatusValue!.isDefault == null
+            widget.task.eventStatusValue!.isDefault == false ||
+                    widget.task.eventStatusValue!.isDefault == null
                 ? BoxTile(
                     margin: const EdgeInsets.only(bottom: 8),
                     title: TextFormField(
@@ -566,11 +608,15 @@ class _TaskState extends State<Task> {
                       onChanged: (value) {
                         widget.task.description = value;
                       },
-                      decoration: const InputDecoration(border: InputBorder.none, labelText: 'Açıklama', hintText: "Açıklama Giriniz"),
+                      decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          labelText: 'Açıklama',
+                          hintText: "Açıklama Giriniz"),
                     ),
                   )
                 : const SizedBox(),
-            widget.task.eventStatusValue!.isDefault == false || widget.task.eventStatusValue!.isDefault == null
+            widget.task.eventStatusValue!.isDefault == false ||
+                    widget.task.eventStatusValue!.isDefault == null
                 ? BoxTile(
                     onTap: () {},
                     padding: EdgeInsets.zero,
@@ -580,10 +626,12 @@ class _TaskState extends State<Task> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(14.0).copyWith(bottom: 0, left: 20),
+                          padding: const EdgeInsets.all(14.0)
+                              .copyWith(bottom: 0, left: 20),
                           child: Text(
                             "YAPILAN GÖREVİN YÜZDESİ",
-                            style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+                            style: TextStyle(
+                                fontSize: 12, color: Colors.grey.shade700),
                           ),
                         ),
                         Slider(
@@ -592,8 +640,11 @@ class _TaskState extends State<Task> {
                           value: taskPercent,
                           divisions: 10,
                           label: "$taskPercent",
-                          activeColor: Utils.hexOrRGBToColor(widget.task.eventStatusValue!.colorCode!),
-                          inactiveColor: Utils.hexOrRGBToColor(widget.task.eventStatusValue!.colorCode!).withOpacity(0.2),
+                          activeColor: Utils.hexOrRGBToColor(
+                              widget.task.eventStatusValue!.colorCode!),
+                          inactiveColor: Utils.hexOrRGBToColor(
+                                  widget.task.eventStatusValue!.colorCode!)
+                              .withOpacity(0.2),
                           onChanged: (value) {
                             setState(() {
                               taskPercent = value;
@@ -604,11 +655,13 @@ class _TaskState extends State<Task> {
                       ],
                     ))
                 : const SizedBox(),
-            widget.task.eventStatusValue!.isDefault == false || widget.task.eventStatusValue!.isDefault == null
+            widget.task.eventStatusValue!.isDefault == false ||
+                    widget.task.eventStatusValue!.isDefault == null
                 ? BoxTile(
                     trailing: TextButton(
                       onPressed: () async {
-                        XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+                        XFile? image = await _picker.pickImage(
+                            source: ImageSource.gallery);
                         if (image != null) {
                           uploadImage(image);
                         }
@@ -661,11 +714,13 @@ class _TaskState extends State<Task> {
                   style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
                 ),
               ),
-            widget.task.eventStatusValue!.isDefault == false || widget.task.eventStatusValue!.isDefault == null
+            widget.task.eventStatusValue!.isDefault == false ||
+                    widget.task.eventStatusValue!.isDefault == null
                 ? BoxTile(
                     trailing: TextButton(
                       onPressed: () async {
-                        FilePickerResult? result = await FilePicker.platform.pickFiles();
+                        FilePickerResult? result =
+                            await FilePicker.platform.pickFiles();
                         if (result != null) {
                           uploadFile(result);
                         }
@@ -718,12 +773,15 @@ class _TaskState extends State<Task> {
                   style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
                 ),
               ),
-            widget.task.eventStatusValue!.isDefault == false || widget.task.eventStatusValue!.isDefault == null
+            widget.task.eventStatusValue!.isDefault == false ||
+                    widget.task.eventStatusValue!.isDefault == null
                 ? BoxTile(
                     trailing: TextButton(
                       onPressed: () async {
                         XFile? video = await _picker.pickVideo(
-                            source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear, maxDuration: const Duration(seconds: 30));
+                            source: ImageSource.camera,
+                            preferredCameraDevice: CameraDevice.rear,
+                            maxDuration: const Duration(seconds: 30));
 
                         if (video != null) {
                           uploadVideo(video);
@@ -774,13 +832,65 @@ class _TaskState extends State<Task> {
                   style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
                 ),
               ),
+            FutureBuilder<List<MaterialModel>>(
+              future: API.workStepGetMaterials(widget.task),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<MaterialModel>> snapshot) {
+                List<Widget> children;
+                if (snapshot.hasData) {
+                  children = <Widget>[
+                    const ListTile(
+                      title: Text("Görevler & Malzemeler"),
+                    ),
+                    for (var item in snapshot.data!)
+                      BoxTile(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        title: Text(
+                            item.name != null ? item.name! : item.productName!),
+                            trailing: Text("${item.totalQuantity}/${item.usedQuantity}"),
+                      ),
+                  ];
+                } else if (snapshot.hasError) {
+                  children = <Widget>[
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 60,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Text('Error: ${snapshot.error}'),
+                    ),
+                  ];
+                } else {
+                  children = const <Widget>[
+                    SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: CircularProgressIndicator(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Text('Awaiting result...'),
+                    ),
+                  ];
+                }
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: children,
+                  ),
+                );
+              },
+            ),
             getButton(),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ContactPerson(task:widget.task)),
+                    MaterialPageRoute(
+                        builder: (context) => ContactPerson(task: widget.task)),
                   );
                 },
                 child: const Text("YÖNLENDİR")),

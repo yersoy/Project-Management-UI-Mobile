@@ -17,7 +17,7 @@ class _TaskImagesState extends State<TaskImages> {
   Widget build(BuildContext context) {
     return ListView(padding: const EdgeInsets.all(14).copyWith(top: 0), children: [
       BoxTile(
-          margin: EdgeInsets.symmetric(vertical: 14),
+          margin: const EdgeInsets.symmetric(vertical: 14),
           title: const Text(
             "Filtre",
             style: TextStyle(fontSize: 18),
@@ -28,7 +28,7 @@ class _TaskImagesState extends State<TaskImages> {
               padding: EdgeInsets.only(left: 8.0),
               child: Icon(LineIcons.angleDown, size: 18),
             ),
-            underline: SizedBox(),
+            underline: const SizedBox(),
             elevation: 0,
             style: const TextStyle(color: Colors.blue),
             onChanged: (String? value) {
